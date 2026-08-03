@@ -38,6 +38,33 @@
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
+        <!-- Register As -->
+<div class="mt-4">
+    <x-input-label for="role_id" :value="__('Register As')" />
+
+    <select id="role_id"
+            name="role_id"
+            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+            required>
+
+        <option value="">Select Role</option>
+
+        <option value="2" {{ old('role_id') == 2 ? 'selected' : '' }}>
+            Donor
+        </option>
+
+        <option value="3" {{ old('role_id') == 3 ? 'selected' : '' }}>
+            Receiver
+        </option>
+
+        <option value="4" {{ old('role_id') == 4 ? 'selected' : '' }}>
+            Volunteer
+        </option>
+
+    </select>
+
+    <x-input-error :messages="$errors->get('role_id')" class="mt-2" />
+</div>
 
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">

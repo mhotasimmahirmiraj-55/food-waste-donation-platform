@@ -7,21 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 class FoodDonation extends Model
 {
     protected $fillable = [
-        'user_id',
-        'food_category_id',
-        'title',
-        'description',
-        'quantity',
-        'pickup_location',
-        'expiry_date',
-        'status',
-    ];
+    'donor_id',
+    'food_category_id',
+    'title',
+    'description',
+    'quantity',
+    'expiry_time',
+    'pickup_address',
+    'latitude',
+    'longitude',
+    'pickup_date',
+    'pickup_time',
+    'status',
+    'food_image',
+];
 
 
     // Donor relationship
     public function donor()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'donor_id');
     }
 
 
