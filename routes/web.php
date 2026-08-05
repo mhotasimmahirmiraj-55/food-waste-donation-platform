@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FoodDonationController;
 use App\Http\Controllers\ProfileController;
@@ -40,7 +41,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
 
-
     // =========================
     // Dashboard Routes
     // =========================
@@ -78,6 +78,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
+    // =========================
+    // Donation Routes
+    // =========================
+    
+    Route::get('/admin/users', [AdminUserController::class, 'index'])
+        ->middleware('role:admin')
+        ->name('admin.users');
 
 
     // =========================

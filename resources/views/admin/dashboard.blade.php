@@ -80,6 +80,14 @@
                     </div>
 
                 </div>
+
+                <div class="mt-8">
+                    <a href="{{ route('admin.users') }}"
+                    class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        Manage Users
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
