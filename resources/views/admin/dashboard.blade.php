@@ -82,10 +82,17 @@
                 </div>
 
                 <div class="mt-8">
+
                     <a href="{{ route('admin.users') }}"
-                    class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                         Manage Users
                     </a>
+
+                    <a href="{{ route('admin.donations') }}"
+                        class="inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 ml-2">
+                        Manage Donations
+                    </a>
+
                 </div>
 
             </div>
