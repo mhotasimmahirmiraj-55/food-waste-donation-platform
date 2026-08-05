@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminDonationController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FoodDonationController;
 use App\Http\Controllers\ProfileController;
@@ -40,7 +42,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
 
-
     // =========================
     // Dashboard Routes
     // =========================
@@ -78,7 +79,62 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
+    // =========================
+    // User Management Routes
+    // =========================
+    
+    Route::get('/admin/users', 
+        [AdminUserController::class, 'index']
+    )
+    ->middleware('role:admin')
+    ->name('admin.users');
 
+    Route::get('/admin/users/{user}/edit',
+        [AdminUserController::class, 'edit']
+    )
+    ->middleware('role:admin')
+    ->name('admin.users.edit');
+
+    Route::put('/admin/users/{user}',
+        [AdminUserController::class, 'update']
+    )
+    ->middleware('role:admin')
+    ->name('admin.users.update');
+
+
+    // =========================
+    // Donation Management Routes
+    // =========================
+
+    Route::get('/admin/donations',
+        [AdminDonationController::class, 'index']
+    )
+    ->middleware('role:admin')
+    ->name('admin.donations');
+
+    Route::get('/admin/donations/{donation}',
+        [AdminDonationController::class, 'show']
+    )
+    ->middleware('role:admin')
+    ->name('admin.donations.show');
+
+    Route::get('/admin/donations/{donation}/edit',
+        [AdminDonationController::class, 'edit']
+    )
+    ->middleware('role:admin')
+    ->name('admin.donations.edit');
+
+    Route::put('/admin/donations/{donation}',
+        [AdminDonationController::class, 'update']
+    )
+    ->middleware('role:admin')
+    ->name('admin.donations.update');
+
+    Route::delete('/admin/donations/{donation}',
+        [AdminDonationController::class, 'destroy']
+    )
+    ->middleware('role:admin')
+    ->name('admin.donations.destroy');
 
     // =========================
     // Donation Routes
