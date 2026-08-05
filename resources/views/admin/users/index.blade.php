@@ -8,9 +8,17 @@
 
             <div class="bg-white shadow-sm rounded-lg p-6">
 
-                <h3 class="text-xl font-bold">
+                <h3 class="text-xl font-bold mb-4">
                     User Management
                 </h3>
+
+                @if (session('success'))
+
+                    <div class="mb-4 rounded-lg bg-green-100 border border-green-400 text-green-700 px-4 py-3">
+                        {{ session('success') }}
+                    </div>
+
+                @endif
 
                 <div class="overflow-x-auto mt-6">
 
@@ -57,7 +65,12 @@
                                     </td>
 
                                     <td class="border px-4 py-2">
-                                        Edit
+                                        <a 
+                                            href="{{ route('admin.users.edit', $user) }}"
+                                            class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                                        >
+                                            Edit
+                                        </a>
                                     </td>
 
                                 </tr>
@@ -67,6 +80,10 @@
                         </tbody>
 
                     </table>
+
+                    <div class="mt-4">
+                        {{ $users->links() }}
+                    </div>
 
                 </div>
 

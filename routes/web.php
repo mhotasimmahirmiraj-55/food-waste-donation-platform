@@ -79,12 +79,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     // =========================
-    // Donation Routes
+    // User Management Routes
     // =========================
     
-    Route::get('/admin/users', [AdminUserController::class, 'index'])
-        ->middleware('role:admin')
-        ->name('admin.users');
+    Route::get('/admin/users', 
+        [AdminUserController::class, 'index']
+    )
+    ->middleware('role:admin')
+    ->name('admin.users');
+
+    Route::get('/admin/users/{user}/edit',
+        [AdminUserController::class, 'edit']
+    )
+    ->middleware('role:admin')
+    ->name('admin.users.edit');
+    
+    Route::put('/admin/users/{user}',
+        [AdminUserController::class, 'update']
+    )
+    ->middleware('role:admin')
+    ->name('admin.users.update');
 
 
     // =========================
