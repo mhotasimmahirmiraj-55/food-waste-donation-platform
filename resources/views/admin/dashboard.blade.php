@@ -93,6 +93,11 @@
                         Manage Donations
                     </a>
 
+                    <a href="{{ route('admin.categories') }}"
+                        class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 ml-2">
+                        Food Categories
+                    </a>
+
                 </div>
 
             </div>

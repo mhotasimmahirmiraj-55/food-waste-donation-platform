@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminDonationController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\DashboardController;
@@ -135,6 +136,47 @@ Route::middleware(['auth', 'verified'])->group(function () {
     )
     ->middleware('role:admin')
     ->name('admin.donations.destroy');
+
+
+    // =========================
+    // Food Category Management Routes
+    // =========================
+
+    Route::get('/admin/categories',
+        [AdminCategoryController::class, 'index']
+    )
+    ->middleware('role:admin')
+    ->name('admin.categories');
+
+    Route::get('/admin/categories/create',
+        [AdminCategoryController::class, 'create']
+    )
+    ->middleware('role:admin')
+    ->name('admin.categories.create');
+
+    Route::post('/admin/categories',
+        [AdminCategoryController::class, 'store']
+    )
+    ->middleware('role:admin')
+    ->name('admin.categories.store');
+
+    Route::get('/admin/categories/{category}/edit',
+        [AdminCategoryController::class, 'edit']
+    )
+    ->middleware('role:admin')
+    ->name('admin.categories.edit');
+
+    Route::put('/admin/categories/{category}',
+        [AdminCategoryController::class, 'update']
+    )
+    ->middleware('role:admin')
+    ->name('admin.categories.update');
+
+    Route::delete('/admin/categories/{category}',
+        [AdminCategoryController::class, 'destroy']
+    )
+    ->middleware('role:admin')
+    ->name('admin.categories.destroy');
 
     // =========================
     // Donation Routes
