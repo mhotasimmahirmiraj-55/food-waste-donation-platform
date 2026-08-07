@@ -79,6 +79,54 @@
                         </p>
                     </div>
 
+                    <div class="bg-red-200 rounded-lg shadow p-6">
+
+                        <h4 class="text-gray-600 text-sm">
+                            Blocked Users
+                        </h4>
+
+                        <p class="text-3xl font-bold mt-2">
+                            {{ $blockedUsers }}
+                        </p>
+
+                    </div>
+
+                    <div class="bg-purple-100 rounded-lg shadow p-6">
+
+                        <h4 class="text-gray-600 text-sm">
+                            Food Categories
+                        </h4>
+
+                        <p class="text-3xl font-bold mt-2">
+                            {{ $totalCategories }}
+                        </p>
+
+                    </div>
+
+                    <div class="bg-indigo-100 rounded-lg shadow p-6">
+
+                        <h4 class="text-gray-600 text-sm">
+                            Total Claims
+                        </h4>
+
+                        <p class="text-3xl font-bold mt-2">
+                            {{ $totalClaims }}
+                        </p>
+
+                    </div>
+
+                    <div class="bg-pink-100 rounded-lg shadow p-6">
+
+                        <h4 class="text-gray-600 text-sm">
+                            Total Reports
+                        </h4>
+
+                        <p class="text-3xl font-bold mt-2">
+                            {{ $totalReports }}
+                        </p>
+
+                    </div>
+
                 </div>
 
                 <div class="mt-8">

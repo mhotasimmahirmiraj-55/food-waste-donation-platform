@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Claim;
+use App\Models\FoodCategory;
+use App\Models\Report;
 use App\Models\User;
 use App\Models\FoodDonation;
 use Illuminate\Http\Request;
@@ -17,6 +20,10 @@ class DashboardController extends Controller
         $totalDonors = User::where('role_id',2) ->count();
         $totalReceivers = User::where('role_id', 3)->count();
         $totalVolunteers = User::where('role_id', 4)->count();
+        $blockedUsers = User::where('status', 'blocked')->count();
+        $totalCategories = FoodCategory::count();
+        $totalClaims = Claim::count();
+        $totalReports = Report::count();
         return view('admin.dashboard', [
             'totalUsers' => $totalUsers,
             'totalDonations' => $totalDonations,
@@ -24,6 +31,10 @@ class DashboardController extends Controller
             'totalDonors' => $totalDonors,
             'totalReceivers' => $totalReceivers,
             'totalVolunteers' => $totalVolunteers,
+            'blockedUsers' => $blockedUsers,
+            'totalCategories' => $totalCategories,
+            'totalClaims' => $totalClaims,
+            'totalReports' => $totalReports,
             ]);
     }
 
