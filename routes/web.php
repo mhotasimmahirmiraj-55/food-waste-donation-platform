@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminDonationController;
 use App\Http\Controllers\AdminUserController;
@@ -177,6 +178,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
     )
     ->middleware('role:admin')
     ->name('admin.categories.destroy');
+
+
+    // =========================
+    // Report Management Routes
+    // =========================
+
+    Route::get('/admin/reports',
+        [AdminReportController::class, 'index']
+    )
+    ->middleware('role:admin')
+    ->name('admin.reports');
+
+    Route::get('/admin/reports/{report}',
+        [AdminReportController::class, 'show']
+    )
+    ->middleware('role:admin')
+    ->name('admin.reports.show');
+
+    Route::get('/admin/reports/{report}/edit',
+        [AdminReportController::class, 'edit']
+    )
+    ->middleware('role:admin')
+    ->name('admin.reports.edit');
+
+    Route::put('/admin/reports/{report}',
+        [AdminReportController::class, 'update']
+    )
+    ->middleware('role:admin')
+    ->name('admin.reports.update');
+
 
     // =========================
     // Donation Routes
