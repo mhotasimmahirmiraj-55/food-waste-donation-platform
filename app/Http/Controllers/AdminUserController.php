@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminUserController extends Controller
 {
@@ -40,4 +41,25 @@ class AdminUserController extends Controller
             ->route('admin.users')
             ->with('success', 'User role updated successfully.');
     }
+
+    public function toggleStatus(User $user)
+    {
+        // Prevent an admin from blocking themselves
+        if ($user->id === Auth::id()) {
+            return redirect()
+                ->route('admin.users')
+                ->with('error', 'You cannot block your own account.');
+        }
+
+        $user->status = $user->status === 'active'
+            ? 'blocked'
+            : 'active';
+
+        $user->save();
+
+        return redirect()
+            ->route('admin.users')
+            ->with('success', 'User status updated successfully.');
+    }
+
 }

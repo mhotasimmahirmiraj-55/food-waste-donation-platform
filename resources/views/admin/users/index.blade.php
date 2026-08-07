@@ -20,6 +20,14 @@
 
                 @endif
 
+                @if (session('error'))
+
+                    <div class="mb-4 rounded-lg bg-red-100 border border-red-400 text-red-700 px-4 py-3">
+                        {{ session('error') }}
+                    </div>
+
+                @endif
+
                 <div class="overflow-x-auto mt-6">
 
                     <table class="min-w-full border border-gray-300">
@@ -35,6 +43,8 @@
                                 <th class="border px-4 py-2">Email</th>
 
                                 <th class="border px-4 py-2">Role</th>
+
+                                <th class="border px-4 py-2">Status</th>
 
                                 <th class="border px-4 py-2">Action</th>
 
@@ -64,13 +74,53 @@
                                         {{ $user->role->name }}
                                     </td>
 
+                                    <td class="border px-4 py-2 text-center">
+
+                                        @if ($user->status == 'active')
+
+                                            <span class="text-green-600 font-semibold">
+                                                Active
+                                            </span>
+
+                                        @else
+
+                                            <span class="text-red-600 font-semibold">
+                                                Blocked
+                                            </span>
+
+                                        @endif
+
+                                    </td>
+
                                     <td class="border px-4 py-2">
-                                        <a 
+
+                                        <a
                                             href="{{ route('admin.users.edit', $user) }}"
                                             class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                                         >
                                             Edit
                                         </a>
+
+                                        <form
+                                            action="{{ route('admin.users.toggle-status', $user) }}"
+                                            method="POST"
+                                            class="inline"
+                                        >
+                                            @csrf
+                                            @method('PUT')
+
+                                            <button
+                                                type="submit"
+                                                class="{{ $user->status == 'active'
+                                                    ? 'bg-red-600 hover:bg-red-700'
+                                                    : 'bg-green-600 hover:bg-green-700' }}
+                                                    text-white px-3 py-1 rounded ml-2"
+                                            >
+                                                {{ $user->status == 'active' ? 'Block' : 'Unblock' }}
+                                            </button>
+
+                                        </form>
+
                                     </td>
 
                                 </tr>
