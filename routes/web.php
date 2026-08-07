@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminClaimController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminDonationController;
@@ -208,6 +209,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->middleware('role:admin')
     ->name('admin.reports.update');
 
+
+    // =========================
+    // Claim Management Routes
+    // =========================
+
+    Route::get('/admin/claims',
+        [AdminClaimController::class, 'index']
+    )
+    ->middleware('role:admin')
+    ->name('admin.claims');
+
+    Route::get('/admin/claims/{claim}',
+        [AdminClaimController::class, 'show']
+    )
+    ->middleware('role:admin')
+    ->name('admin.claims.show');
+
+    Route::get('/admin/claims/{claim}/edit',
+        [AdminClaimController::class, 'edit']
+    )
+    ->middleware('role:admin')
+    ->name('admin.claims.edit');
+
+    Route::put('/admin/claims/{claim}',
+        [AdminClaimController::class, 'update']
+    )
+    ->middleware('role:admin')
+    ->name('admin.claims.update');
 
     // =========================
     // Donation Routes

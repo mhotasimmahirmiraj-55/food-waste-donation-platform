@@ -103,6 +103,11 @@
                         Manage Reports
                     </a>
 
+                    <a href="{{ route('admin.claims') }}"
+                        class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 ml-2">
+                        Manage Claims
+                    </a>
+
                 </div>
 
             </div>
