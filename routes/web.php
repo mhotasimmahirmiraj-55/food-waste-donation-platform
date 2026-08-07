@@ -104,6 +104,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->middleware('role:admin')
     ->name('admin.users.update');
 
+    Route::put('/admin/users/{user}/toggle-status',
+        [AdminUserController::class, 'toggleStatus']
+    )
+    ->middleware('role:admin')
+    ->name('admin.users.toggle-status');
+
 
     // =========================
     // Donation Management Routes
