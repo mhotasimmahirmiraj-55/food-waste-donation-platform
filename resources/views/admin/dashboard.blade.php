@@ -98,6 +98,11 @@
                         Food Categories
                     </a>
 
+                    <a href="{{ route('admin.reports') }}"
+                        class="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 ml-2">
+                        Manage Reports
+                    </a>
+
                 </div>
 
             </div>

@@ -7,16 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     protected $fillable = [
-        'user_id',
-        'title',
-        'description',
+        'reporter_id',
+        'reported_user_id',
+        'reason',
         'status',
     ];
 
-
-    // User relationship
-    public function user()
+    // User who submitted the report
+    public function reporter()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'reporter_id');
+    }
+
+    // User being reported
+    public function reportedUser()
+    {
+        return $this->belongsTo(User::class, 'reported_user_id');
     }
 }
