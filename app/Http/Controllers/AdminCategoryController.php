@@ -9,16 +9,19 @@ class AdminCategoryController extends Controller
 {
     public function index()
     {
-        $categories = FoodCategory::paginate(10);
+        $categories = FoodCategory::latest()->paginate(10);
 
         return view('admin.categories.index', [
             'categories' => $categories,
         ]);
     }
+
+
     public function create()
     {
         return view('admin.categories.create');
     }
+
 
     public function store(Request $request)
     {
@@ -35,12 +38,14 @@ class AdminCategoryController extends Controller
             ->with('success', 'Category added successfully.');
     }
 
+
     public function edit(FoodCategory $category)
     {
         return view('admin.categories.edit', [
             'category' => $category,
         ]);
     }
+
 
     public function update(Request $request, FoodCategory $category)
     {
@@ -57,13 +62,17 @@ class AdminCategoryController extends Controller
             ->with('success', 'Category updated successfully.');
     }
 
-public function destroy(FoodCategory $category)
+
+    public function destroy(FoodCategory $category)
     {
         if ($category->foodDonations()->exists()) {
 
             return redirect()
                 ->route('admin.categories')
-                ->with('error', 'Cannot delete category because it is being used by existing donations.');
+                ->with(
+                    'error',
+                    'Cannot delete category because it is being used by existing donations.'
+                );
         }
 
         $category->delete();
@@ -72,5 +81,4 @@ public function destroy(FoodCategory $category)
             ->route('admin.categories')
             ->with('success', 'Category deleted successfully.');
     }
-
 }

@@ -9,24 +9,55 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminUserController extends Controller
 {
-    public function index()
+    /**
+     * Display users.
+     *
+     * Supports filtering by:
+     * - role_id
+     * - status
+     */
+    public function index(Request $request)
     {
-        $users = User::with('role')->paginate(10);
+        $query = User::with('role');
 
-        return view('admin.users.index',[
+        // Filter by role
+        if ($request->filled('role_id')) {
+            $query->where('role_id', $request->role_id);
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $users = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.users.index', [
             'users' => $users,
         ]);
     }
 
+
+    /**
+     * Show edit form.
+     */
     public function edit(User $user)
     {
         $roles = Role::all();
+
         return view('admin.users.edit', [
             'user' => $user,
             'roles' => $roles,
         ]);
     }
 
+
+    /**
+     * Update user's role.
+     */
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -42,6 +73,10 @@ class AdminUserController extends Controller
             ->with('success', 'User role updated successfully.');
     }
 
+
+    /**
+     * Toggle user's active/blocked status.
+     */
     public function toggleStatus(User $user)
     {
         // Prevent an admin from blocking themselves
@@ -61,5 +96,4 @@ class AdminUserController extends Controller
             ->route('admin.users')
             ->with('success', 'User status updated successfully.');
     }
-
 }

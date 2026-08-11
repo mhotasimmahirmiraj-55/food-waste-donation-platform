@@ -7,18 +7,30 @@ use Illuminate\Http\Request;
 
 class AdminDeliveryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $deliveries = Delivery::with([
+        $query = Delivery::with([
             'claim.foodDonation',
             'claim.receiver',
             'volunteer',
-        ])->paginate(10);
+        ]);
+
+        // Filter by delivery status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $deliveries = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.deliveries.index', [
             'deliveries' => $deliveries,
         ]);
     }
+
+
     public function show(Delivery $delivery)
     {
         $delivery->load([
@@ -34,6 +46,7 @@ class AdminDeliveryController extends Controller
         ]);
     }
 
+
     public function release(Delivery $delivery)
     {
         $delivery->update([
@@ -48,5 +61,4 @@ class AdminDeliveryController extends Controller
             ->route('admin.deliveries')
             ->with('success', 'Delivery released and is now available for another volunteer.');
     }
-
 }

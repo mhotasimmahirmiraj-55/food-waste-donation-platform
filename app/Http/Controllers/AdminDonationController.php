@@ -8,29 +8,41 @@ use Illuminate\Http\Request;
 
 class AdminDonationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $donations = FoodDonation::with([
+        $query = FoodDonation::with([
             'donor',
             'category',
-        ])->paginate(10);
+        ]);
+
+        // Filter by donation status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $donations = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.donations.index', [
             'donations' => $donations,
         ]);
     }
 
+
     public function show(FoodDonation $donation)
     {
         $donation->load([
             'donor',
-            'category'
+            'category',
         ]);
 
         return view('admin.donations.show', [
             'donation' => $donation,
         ]);
     }
+
 
     public function edit(FoodDonation $donation)
     {
@@ -45,6 +57,7 @@ class AdminDonationController extends Controller
             'categories' => $categories,
         ]);
     }
+
 
     public function update(Request $request, FoodDonation $donation)
     {
@@ -70,6 +83,7 @@ class AdminDonationController extends Controller
             ->with('success', 'Donation updated successfully.');
     }
 
+
     public function destroy(FoodDonation $donation)
     {
         if ($donation->status !== 'available') {
@@ -82,6 +96,4 @@ class AdminDonationController extends Controller
             ->route('admin.donations')
             ->with('success', 'Donation deleted successfully.');
     }
-
-    
 }
