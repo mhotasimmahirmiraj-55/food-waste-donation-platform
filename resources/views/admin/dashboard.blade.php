@@ -156,6 +156,11 @@
                         Manage Claims
                     </a>
 
+                    <a href="{{ route('admin.deliveries') }}"
+                        class="inline-block bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 ml-2">
+                        Manage Deliveries
+                    </a>
+
                 </div>
 
             </div>
