@@ -7,17 +7,28 @@ use Illuminate\Http\Request;
 
 class AdminClaimController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $claims = Claim::with([
+        $query = Claim::with([
             'foodDonation',
             'receiver',
-        ])->paginate(10);
+        ]);
+
+        // Filter by claim status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $claims = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.claims.index', [
             'claims' => $claims,
         ]);
     }
+
 
     public function show(Claim $claim)
     {
@@ -31,6 +42,7 @@ class AdminClaimController extends Controller
         ]);
     }
 
+
     public function edit(Claim $claim)
     {
         $claim->load([
@@ -42,6 +54,7 @@ class AdminClaimController extends Controller
             'claim' => $claim,
         ]);
     }
+
 
     public function update(Request $request, Claim $claim)
     {
@@ -57,5 +70,4 @@ class AdminClaimController extends Controller
             ->route('admin.claims')
             ->with('success', 'Claim status updated successfully.');
     }
-
 }

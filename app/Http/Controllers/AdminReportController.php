@@ -7,17 +7,28 @@ use Illuminate\Http\Request;
 
 class AdminReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $reports = Report::with([
+        $query = Report::with([
             'reporter',
             'reportedUser',
-        ])->paginate(10);
+        ]);
+
+        // Filter by report status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $reports = $query
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.reports.index', [
             'reports' => $reports,
         ]);
     }
+
 
     public function show(Report $report)
     {
@@ -31,12 +42,14 @@ class AdminReportController extends Controller
         ]);
     }
 
+
     public function edit(Report $report)
     {
         return view('admin.reports.edit', [
             'report' => $report,
         ]);
     }
+
 
     public function update(Request $request, Report $report)
     {
@@ -52,5 +65,4 @@ class AdminReportController extends Controller
             ->route('admin.reports')
             ->with('success', 'Report status updated successfully.');
     }
-
 }
