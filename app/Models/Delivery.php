@@ -10,7 +10,9 @@ class Delivery extends Model
         'claim_id',
         'volunteer_id',
         'status',
-        'delivery_date',
+        'accepted_at',
+        'picked_up_at',
+        'delivered_at',
     ];
 
 

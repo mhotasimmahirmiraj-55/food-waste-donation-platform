@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDeliveryController;
 use App\Http\Controllers\AdminClaimController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminCategoryController;
@@ -243,6 +244,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
     )
     ->middleware('role:admin')
     ->name('admin.claims.update');
+
+
+    // =========================
+    // Delivery Management Routes
+    // =========================
+
+    Route::get('/admin/deliveries',
+        [AdminDeliveryController::class, 'index']
+    )
+    ->middleware('role:admin')
+    ->name('admin.deliveries');
+
+    Route::get('/admin/deliveries/{delivery}',
+        [AdminDeliveryController::class, 'show']
+    )
+    ->middleware('role:admin')
+    ->name('admin.deliveries.show');
+
+    Route::put('/admin/deliveries/{delivery}/release',
+        [AdminDeliveryController::class, 'release']
+    )
+    ->middleware('role:admin')
+    ->name('admin.deliveries.release');
 
     // =========================
     // Donation Routes
