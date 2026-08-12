@@ -10,21 +10,23 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::table('users', function (Blueprint $table) {
-        $table->foreignId('role_id')
-              ->nullable()
-              ->constrained('roles')
-              ->after('id');
-    });
-}
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
 
-
-public function down(): void
-{
-    Schema::table('users', function (Blueprint $table) {
-        $table->dropForeign(['role_id']);
-        $table->dropColumn('role_id');
-    });
-}
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
 };

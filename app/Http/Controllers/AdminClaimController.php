@@ -59,7 +59,7 @@ class AdminClaimController extends Controller
     public function update(Request $request, Claim $claim)
     {
         $request->validate([
-            'status' => 'required|in:pending,approved,rejected,completed',
+            'status' => 'required|in:pending,approved,rejected,completed,cancelled',
         ]);
 
         $claim->update([
