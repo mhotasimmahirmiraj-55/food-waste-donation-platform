@@ -9,6 +9,8 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FoodDonationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReceiverController;
+use App\Http\Controllers\ReceiverBookmarkController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,9 +21,10 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-
     // Dashboard Redirect
     Route::get('/dashboard', function () {
+        // The Receiver Bookmark Routes were incorrectly placed inside this closure.
+        // They have been moved to the main middleware group for proper routing.
 
         $user = auth()->user();
 
@@ -45,6 +48,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     })->name('dashboard');
 
+    // =========================
+    // Receiver Bookmark Routes
+    // =========================
+
+    Route::get('/receiver/bookmarks',
+        [ReceiverBookmarkController::class, 'index']
+    )
+        ->middleware('role:receiver')
+        ->name('receiver.bookmarks');
+
+    Route::post('/receiver/bookmarks/{foodDonation}',
+        [ReceiverBookmarkController::class, 'store']
+    )
+        ->middleware('role:receiver')
+        ->name('receiver.bookmarks.store');
+
+    Route::delete('/receiver/bookmarks/{foodDonation}',
+        [ReceiverBookmarkController::class, 'destroy']
+    )
+        ->middleware('role:receiver')
+        ->name('receiver.bookmarks.destroy');
+
+
 
     // =========================
     // Dashboard Routes
@@ -67,12 +93,50 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
-    Route::get('/receiver/dashboard', 
-        [DashboardController::class, 'receiver']
+    Route::get('/receiver/dashboard',
+        [ReceiverController::class, 'dashboard']
     )
     ->middleware('role:receiver')
     ->name('receiver.dashboard');
+    // =========================
+    // Receiver Module Routes
+    // =========================
 
+    Route::get('/receiver/donations',
+        [ReceiverController::class, 'donations']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.donations');
+
+    Route::get('/receiver/donations/{donation}',
+        [ReceiverController::class, 'showDonation']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.donations.show');
+
+    Route::post('/receiver/donations/{donation}/claim',
+        [ReceiverController::class, 'storeClaim']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.claims.store');
+
+    Route::get('/receiver/claims',
+        [ReceiverController::class, 'claims']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.claims');
+
+    Route::get('/receiver/claims/{claim}',
+        [ReceiverController::class, 'showClaim']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.claims.show');
+
+    Route::patch('/receiver/claims/{claim}/cancel',
+        [ReceiverController::class, 'cancelClaim']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.claims.cancel');
 
 
     Route::get('/volunteer/dashboard', 
