@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FoodDonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReceiverController;
+use App\Http\Controllers\ReceiverBookmarkController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -20,9 +21,10 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-
     // Dashboard Redirect
     Route::get('/dashboard', function () {
+        // The Receiver Bookmark Routes were incorrectly placed inside this closure.
+        // They have been moved to the main middleware group for proper routing.
 
         $user = auth()->user();
 
@@ -45,6 +47,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
         }
 
     })->name('dashboard');
+
+    // =========================
+    // Receiver Bookmark Routes
+    // =========================
+
+    Route::get('/receiver/bookmarks',
+        [ReceiverBookmarkController::class, 'index']
+    )
+        ->middleware('role:receiver')
+        ->name('receiver.bookmarks');
+
+    Route::post('/receiver/bookmarks/{foodDonation}',
+        [ReceiverBookmarkController::class, 'store']
+    )
+        ->middleware('role:receiver')
+        ->name('receiver.bookmarks.store');
+
+    Route::delete('/receiver/bookmarks/{foodDonation}',
+        [ReceiverBookmarkController::class, 'destroy']
+    )
+        ->middleware('role:receiver')
+        ->name('receiver.bookmarks.destroy');
+
 
 
     // =========================

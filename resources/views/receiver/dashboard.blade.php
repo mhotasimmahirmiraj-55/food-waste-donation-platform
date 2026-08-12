@@ -33,17 +33,30 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
                 <a href="{{ route('receiver.donations') }}"
-                   class="bg-white shadow rounded-lg p-6 hover:shadow-md">
+                   class="bg-white shadow rounded-lg p-6 hover:shadow-md transition">
                     <h3 class="text-xl font-bold mb-2">Browse Food</h3>
-                    <p class="text-gray-600">Browse available food donations and search by location.</p>
+                    <p class="text-gray-600">
+                        Browse available food donations and search by location.
+                    </p>
                 </a>
 
                 <a href="{{ route('receiver.claims') }}"
-                   class="bg-white shadow rounded-lg p-6 hover:shadow-md">
+                   class="bg-white shadow rounded-lg p-6 hover:shadow-md transition">
                     <h3 class="text-xl font-bold mb-2">My Claims</h3>
-                    <p class="text-gray-600">Track your pending, accepted, cancelled and delivered claims.</p>
+                    <p class="text-gray-600">
+                        Track your pending, accepted, cancelled and delivered claims.
+                    </p>
+                </a>
+
+                <a href="{{ route('receiver.bookmarks') }}"
+                   class="bg-white shadow rounded-lg p-6 hover:shadow-md transition">
+                    <h3 class="text-xl font-bold mb-2">Saved Donations</h3>
+                    <p class="text-gray-600">
+                        View and manage the food donations you have saved.
+                    </p>
                 </a>
             </div>
 
