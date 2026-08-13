@@ -461,3 +461,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 require __DIR__ . '/auth.php';
+
+
+// Volunteer Routes
+Route::middleware(['auth', 'role:volunteer'])->prefix('volunteer')->name('volunteer.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\VolunteerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/deliveries', [App\Http\Controllers\VolunteerController::class, 'index'])->name('deliveries.index');
+    Route::get('/deliveries/{id}', [App\Http\Controllers\VolunteerController::class, 'show'])->name('deliveries.show');
+    Route::post('/deliveries/{id}/accept', [App\Http\Controllers\VolunteerController::class, 'accept'])->name('deliveries.accept');
+    Route::post('/deliveries/{id}/update-status', [App\Http\Controllers\VolunteerController::class, 'updateStatus'])->name('deliveries.update-status');
+});
