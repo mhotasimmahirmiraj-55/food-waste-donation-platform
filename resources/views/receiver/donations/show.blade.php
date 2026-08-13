@@ -44,9 +44,20 @@
                             </p>
                         </div>
 
-                        <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
-                            {{ ucfirst($donation->status) }}
-                        </span>
+                        {{-- Donation Status --}}
+                        @if ($myClaim)
+                            <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
+                                Claimed by You
+                            </span>
+                        @elseif ($claimedBySomeoneElse)
+                            <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-800">
+                                Already Claimed
+                            </span>
+                        @else
+                            <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
+                                Available
+                            </span>
+                        @endif
 
                     </div>
 
@@ -151,18 +162,44 @@
 
                         @endif
 
-                        {{-- Claim --}}
-                        @if ($alreadyClaimed)
+                        {{-- Claim Status --}}
 
-                            <a
-                                href="{{ route('receiver.claims') }}"
-                                class="rounded-lg bg-green-600 px-5 py-2.5 text-white hover:bg-green-700"
-                            >
-                                View My Claim
-                            </a>
+                        @if ($myClaim)
+
+                            {{-- Claimed by current receiver --}}
+                            <div class="w-full rounded-lg bg-blue-50 border border-blue-200 p-4">
+                                <p class="font-semibold text-blue-800">
+                                    ✓ You have already claimed this donation.
+                                </p>
+
+                                <p class="text-sm text-blue-700 mt-1">
+                                    You can track your claim status from My Claims.
+                                </p>
+
+                                <a
+                                    href="{{ route('receiver.claims.show', $myClaim) }}"
+                                    class="inline-block mt-3 rounded-lg bg-blue-600 px-5 py-2.5 text-white hover:bg-blue-700"
+                                >
+                                    View My Claim
+                                </a>
+                            </div>
+
+                        @elseif ($claimedBySomeoneElse)
+
+                            {{-- Claimed by another receiver --}}
+                            <div class="w-full rounded-lg bg-red-50 border border-red-200 p-4">
+                                <p class="font-semibold text-red-800">
+                                    This donation has already been claimed.
+                                </p>
+
+                                <p class="text-sm text-red-700 mt-1">
+                                    Unfortunately, this donation is no longer available to claim.
+                                </p>
+                            </div>
 
                         @else
 
+                            {{-- Available to claim --}}
                             <form
                                 method="POST"
                                 action="{{ route('receiver.claims.store', $donation) }}"

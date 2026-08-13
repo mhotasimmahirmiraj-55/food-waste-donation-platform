@@ -16,10 +16,13 @@ class ReceiverController extends Controller
         $receiverId = auth()->id();
 
         $availableDonations = FoodDonation::where('status', 'available')->count();
+
         $myClaims = Claim::where('receiver_id', $receiverId)->count();
+
         $pendingClaims = Claim::where('receiver_id', $receiverId)
             ->where('status', 'pending')
             ->count();
+
         $completedClaims = Claim::where('receiver_id', $receiverId)
             ->where('status', 'completed')
             ->count();
@@ -68,16 +71,29 @@ class ReceiverController extends Controller
 
     public function showDonation(FoodDonation $donation): View
     {
-        abort_unless($donation->status === 'available', 404);
+        // Do NOT return 404 just because the donation is no longer available.
+        // The donation may have already been claimed by the current receiver
+        // or by another receiver.
 
         $donation->load(['donor', 'category']);
 
-        $alreadyClaimed = Claim::where('food_donation_id', $donation->id)
+        // Check whether the current receiver has already claimed this donation.
+        $myClaim = Claim::where('food_donation_id', $donation->id)
             ->where('receiver_id', auth()->id())
+            ->whereIn('status', ['pending', 'approved', 'completed'])
+            ->first();
+
+        // Check whether another receiver has claimed this donation.
+        $claimedBySomeoneElse = Claim::where('food_donation_id', $donation->id)
+            ->where('receiver_id', '!=', auth()->id())
             ->whereIn('status', ['pending', 'approved', 'completed'])
             ->exists();
 
-        return view('receiver.donations.show', compact('donation', 'alreadyClaimed'));
+        return view('receiver.donations.show', compact(
+            'donation',
+            'myClaim',
+            'claimedBySomeoneElse'
+        ));
     }
 
     public function storeClaim(FoodDonation $donation): RedirectResponse
@@ -90,6 +106,16 @@ class ReceiverController extends Controller
                 ->firstOrFail();
 
             if ($lockedDonation->status !== 'available') {
+
+                $existingClaim = Claim::where('food_donation_id', $lockedDonation->id)
+                    ->where('receiver_id', $receiverId)
+                    ->whereIn('status', ['pending', 'approved', 'completed'])
+                    ->exists();
+
+                if ($existingClaim) {
+                    return 'duplicate';
+                }
+
                 return 'unavailable';
             }
 
@@ -108,17 +134,23 @@ class ReceiverController extends Controller
                 'status' => 'pending',
             ]);
 
-            $lockedDonation->update(['status' => 'claimed']);
+            $lockedDonation->update([
+                'status' => 'claimed'
+            ]);
 
             return 'success';
         });
 
-        if ($result === 'unavailable') {
-            return back()->with('error', 'This donation is no longer available.');
+        if ($result === 'duplicate') {
+            return redirect()
+                ->route('receiver.donations.show', $donation)
+                ->with('success', 'You have already claimed this donation.');
         }
 
-        if ($result === 'duplicate') {
-            return back()->with('error', 'You have already claimed this donation.');
+        if ($result === 'unavailable') {
+            return redirect()
+                ->route('receiver.donations.show', $donation)
+                ->with('error', 'This donation has already been claimed by another receiver and is no longer available.');
         }
 
         return redirect()
@@ -140,7 +172,11 @@ class ReceiverController extends Controller
     {
         abort_unless($claim->receiver_id === auth()->id(), 403);
 
-        $claim->load(['foodDonation.donor', 'foodDonation.category', 'delivery']);
+        $claim->load([
+            'foodDonation.donor',
+            'foodDonation.category',
+            'delivery'
+        ]);
 
         return view('receiver.claims.show', compact('claim'));
     }
@@ -150,7 +186,10 @@ class ReceiverController extends Controller
         abort_unless($claim->receiver_id === auth()->id(), 403);
 
         if ($claim->status !== 'pending') {
-            return back()->with('error', 'Only pending claims can be cancelled.');
+            return back()->with(
+                'error',
+                'Only pending claims can be cancelled.'
+            );
         }
 
         DB::transaction(function () use ($claim) {
@@ -158,19 +197,29 @@ class ReceiverController extends Controller
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            if ($lockedClaim->receiver_id !== auth()->id() || $lockedClaim->status !== 'pending') {
+            if (
+                $lockedClaim->receiver_id !== auth()->id() ||
+                $lockedClaim->status !== 'pending'
+            ) {
                 abort(403);
             }
 
-            $lockedClaim->update(['status' => 'cancelled']);
+            $lockedClaim->update([
+                'status' => 'cancelled'
+            ]);
 
             FoodDonation::whereKey($lockedClaim->food_donation_id)
                 ->where('status', 'claimed')
-                ->update(['status' => 'available']);
+                ->update([
+                    'status' => 'available'
+                ]);
         });
 
         return redirect()
             ->route('receiver.claims')
-            ->with('success', 'Your claim has been cancelled and the donation is available again.');
+            ->with(
+                'success',
+                'Your claim has been cancelled and the donation is available again.'
+            );
     }
 }
