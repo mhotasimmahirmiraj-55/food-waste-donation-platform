@@ -4,127 +4,311 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\FoodDonation;
+use App\Models\FoodCategory;
+use Illuminate\Support\Facades\DB;
 
 class FoodDonationController extends Controller
 {
+    // ==========================================
+    // CREATE DONATION PAGE
+    // ==========================================
+
     public function create()
     {
-     return view('donations.create');
+        // Category dropdown-এর জন্য সব category নিয়ে আসা হচ্ছে
+        $categories = FoodCategory::all();
+
+        return view('donations.create', compact('categories'));
     }
-  public function index()
+
+
+    // ==========================================
+    // MY DONATIONS
+    // ==========================================
+
+    public function index()
+    {
+        $donations = FoodDonation::with('items.foodCategory')
+            ->where('donor_id', auth()->id())
+            ->get();
+
+        return view('donations.index', compact('donations'));
+    }
+
+
+    // ==========================================
+    // EDIT DONATIONS LIST
+    // ==========================================
+
+   public function editDonations()
 {
     $donations = FoodDonation::where('donor_id', auth()->id())
-                    ->get();
+        ->get();
 
-    return view('donations.index', compact('donations'));
-}
-
-public function editDonations()
-
-{
-    $donations = FoodDonation::where('donor_id', auth()->id())
-                    ->get();
+    // Expired donations automatically update হবে
+    foreach ($donations as $donation) {
+        if ($donation->status === 'available' && $donation->expiry_time < now()) {
+            $donation->update([
+                'status' => 'expired',
+            ]);
+        }
+    }
 
     return view('donations.edit-index', compact('donations'));
 }
-public function deleteDonations()
-{
-    $donations = FoodDonation::where('donor_id', auth()->id())
-                    ->get();
 
-    return view('donations.delete-index', compact('donations'));
-}
 
+    // ==========================================
+    // DELETE DONATIONS LIST
+    // ==========================================
+
+    public function deleteDonations()
+    {
+        $donations = FoodDonation::where('donor_id', auth()->id())->get();
+
+        return view('donations.delete-index', compact('donations'));
+    }
+
+
+    // ==========================================
+    // EDIT SINGLE DONATION
+    // ==========================================
 
 public function edit($id)
 {
-    $donation = FoodDonation::findOrFail($id);
-
-    return view('donations.edit', compact('donation'));
-}
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'title' => 'required',
-        'quantity' => 'required|integer',
-        'expiry_time' => 'required',
-        'pickup_address' => 'required',
-    ]);
-
-    $donation = FoodDonation::findOrFail($id);
-
-    $donation->update([
-        'title' => $request->title,
-        'quantity' => $request->quantity,
-        'expiry_time' => $request->expiry_time,
-        'description' => $request->description,
-        'pickup_address' => $request->pickup_address,
-    ]);
-
-    return redirect()->route('donations.edit.list');
-}
-
-public function destroy($id)
-{
-    $donation = FoodDonation::where('id', $id)
+    $donation = FoodDonation::with('items.foodCategory')
+        ->where('id', $id)
         ->where('donor_id', auth()->id())
+        ->where('status', 'available')
         ->firstOrFail();
 
-    if ($donation->status != 'available') {
-        return redirect()->route('donations.delete.list')
-            ->with('error', 'Only available donations can be deleted.');
-    }
+    $categories = FoodCategory::all();
 
-    $donation->delete();
-
-    return redirect()->route('donations.delete.list')
-        ->with('success', 'Donation deleted successfully.');
+    return view('donations.edit', compact('donation', 'categories'));
 }
-    public function store(Request $request)
+
+ // ==========================================
+// UPDATE DONATION
+// ==========================================
+
+public function update(Request $request, $id)
 {
+    // ==========================================
+    // 1. VALIDATION
+    // ==========================================
+
     $request->validate([
-        'title' => 'required',
-        'quantity' => 'required|integer',
-        'expiry_time' => 'required',
-        'pickup_address' => 'required',
-        'food_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'title'          => 'required|string|max:255',
+        'description'    => 'nullable|string',
+        'expiry_time'    => 'required|date',
+        'pickup_address' => 'required|string|max:255',
+
+        // Multiple Food Items
+        'items'                    => 'required|array|min:1',
+        'items.*.id'               => 'nullable|integer',
+        'items.*.food_category_id' => 'required|exists:food_categories,id',
+        'items.*.item_name'        => 'required|string|max:255',
+        'items.*.quantity'         => 'required|numeric|min:0.1',
+        'items.*.unit'             => 'required|string|max:50',
     ]);
 
-    // Default value
-    $imagePath = null;
 
-    // যদি user image select করে
-    if ($request->hasFile('food_image')) {
+    // ==========================================
+    // 2. FIND DONATION
+    // ==========================================
 
-        $imagePath = $request->file('food_image')
-                             ->store('food_images', 'public');
+    $donation = FoodDonation::where('id', $id)
+        ->where('donor_id', auth()->id())
+        ->where('status', 'available')
+        ->firstOrFail();
 
-    }
 
-    FoodDonation::create([
-        'donor_id' => auth()->id(),
-        'food_category_id' => 1,
-        'title' => $request->title,
-        'description' => $request->description,
-        'quantity' => $request->quantity,
-        'expiry_time' => $request->expiry_time,
-        'pickup_address' => $request->pickup_address,
+    // ==========================================
+    // 3. DATABASE TRANSACTION
+    // ==========================================
 
-        // Image থাকলে path save হবে, না থাকলে NULL
-        'food_image' => $imagePath,
+    DB::transaction(function () use ($request, $donation) {
 
-        'status' => 'available',
-    ]);
+        // ======================================
+        // UPDATE MAIN DONATION
+        // ======================================
+
+        $donation->update([
+            'title'          => $request->title,
+            'description'    => $request->description,
+            'expiry_time'    => $request->expiry_time,
+            'pickup_address' => $request->pickup_address,
+        ]);
+
+
+        // ======================================
+        // EXISTING ITEM IDs FROM FORM
+        // ======================================
+
+        $submittedItemIds = collect($request->items)
+            ->pluck('id')
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->toArray();
+
+
+        // ======================================
+        // DELETE REMOVED ITEMS
+        // ======================================
+
+        $donation->items()
+            ->whereNotIn('id', $submittedItemIds)
+            ->delete();
+
+
+        // ======================================
+        // UPDATE EXISTING / CREATE NEW ITEMS
+        // ======================================
+
+        foreach ($request->items as $itemData) {
+
+            // ----------------------------------
+            // Existing item
+            // ----------------------------------
+
+            if (!empty($itemData['id'])) {
+
+                $item = $donation->items()
+                    ->where('id', $itemData['id'])
+                    ->firstOrFail();
+
+                $item->update([
+                    'food_category_id' => $itemData['food_category_id'],
+                    'item_name'        => $itemData['item_name'],
+                    'quantity'         => $itemData['quantity'],
+                    'unit'             => $itemData['unit'],
+                ]);
+
+            }
+
+            // ----------------------------------
+            // New item
+            // ----------------------------------
+
+            else {
+
+                $donation->items()->create([
+                    'food_category_id' => $itemData['food_category_id'],
+                    'item_name'        => $itemData['item_name'],
+                    'quantity'         => $itemData['quantity'],
+                    'unit'             => $itemData['unit'],
+                ]);
+
+            }
+        }
+    });
+
+
+    // ==========================================
+    // 4. REDIRECT
+    // ==========================================
 
     return redirect()
-        ->route('donations.create')
-        ->with('success', 'Food Donation Created Successfully');
+        ->route('donations.edit.list')
+        ->with('success', 'Donation updated successfully.');
 }
+    // ==========================================
+    // DELETE DONATION
+    // ==========================================
+
+    public function destroy($id)
+    {
+        $donation = FoodDonation::where('id', $id)
+            ->where('donor_id', auth()->id())
+            ->firstOrFail();
+
+        // Only available donations can be deleted
+        if ($donation->status !== 'available') {
+            return redirect()
+                ->route('donations.delete.list')
+                ->with('error', 'Only available donations can be deleted.');
+        }
+
+        $donation->delete();
+
+        return redirect()
+            ->route('donations.delete.list')
+            ->with('success', 'Donation deleted successfully.');
+    }
+
+
+    // ==========================================
+    // STORE NEW DONATION (Step 5 Updated)
+    // ==========================================
+
+    public function store(Request $request)
+    {
+        // 1. Validation for Parent Donation & Child Multiple Items
+        $request->validate([
+            'title'          => 'required|string|max:255',
+            'expiry_time'    => 'required',
+            'pickup_address' => 'required',
+            'food_image'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            // Multiple Food Items Validation Rules
+            'items'                 => 'required|array|min:1',
+            'items.*.food_category_id' => 'required|exists:food_categories,id',
+            'items.*.item_name'     => 'required|string|max:255',
+            'items.*.quantity'      => 'required|numeric|min:0.1',
+            'items.*.unit'          => 'required|string|max:50',
+        ]);
+
+        // Single food image handling
+        $imagePath = null;
+        if ($request->hasFile('food_image')) {
+            $imagePath = $request->file('food_image')->store('food_images', 'public');
+        }
+
+        // 2. Transaction purely handling safety for both operations
+        DB::transaction(function () use ($request, $imagePath) {
+            
+            // Parent FoodDonation Create
+            $donation = FoodDonation::create([
+                'donor_id'       => auth()->id(),
+                'title'          => $request->title,
+                'description'    => $request->description,
+                'expiry_time'    => $request->expiry_time,
+                'pickup_address' => $request->pickup_address,
+                'food_image'     => $imagePath,
+                'status'         => 'available',
+            ]);
+
+            // Child FoodDonationItems Insert
+            foreach ($request->items as $item) {
+                $donation->items()->create([
+                    'food_category_id' => $item['food_category_id'],
+                    'item_name'        => $item['item_name'],
+                    'quantity'         => $item['quantity'],
+                    'unit'             => $item['unit'],
+                ]);
+            }
+        });
+
+        return redirect()
+            ->route('donations.create')
+            ->with('success', 'Food Donation Created Successfully');
+    }
+
+
+    // ==========================================
+    // UPLOAD PHOTO PAGE
+    // ==========================================
 
     public function uploadPhoto()
     {
         return view('donations.upload-photo');
     }
+
+
+    // ==========================================
+    // STORE PHOTO
+    // ==========================================
 
     public function storePhoto(Request $request)
     {
@@ -134,10 +318,8 @@ public function destroy($id)
 
         $imagePath = $request->file('food_image')->store('food_images', 'public');
 
-        // Temporary session এ save থাকবে
-        session([
-            'food_image' => $imagePath
-        ]);
+        // Store temporary image path in session
+        session(['food_image' => $imagePath]);
 
         return redirect()
             ->route('donations.create')

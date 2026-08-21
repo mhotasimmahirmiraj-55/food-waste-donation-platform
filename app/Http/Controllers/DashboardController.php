@@ -208,10 +208,70 @@ class DashboardController extends Controller
 
 
     public function donor(): View
-    {
-        return view('donor.dashboard');
-    }
+{
+    $donorId = auth()->id();
 
+    // ==============================
+    // DONATION STATISTICS
+    // ==============================
+
+    $totalDonations = FoodDonation::where('donor_id', $donorId)
+        ->count();
+
+    $availableDonations = FoodDonation::where('donor_id', $donorId)
+        ->where('status', 'available')
+        ->count();
+
+    $claimedDonations = FoodDonation::where('donor_id', $donorId)
+        ->where('status', 'claimed')
+        ->count();
+
+    $completedDonations = FoodDonation::where('donor_id', $donorId)
+        ->where('status', 'completed')
+        ->count();
+
+    $expiredDonations = FoodDonation::where('donor_id', $donorId)
+        ->where('status', 'expired')
+        ->count();
+
+
+    // ==============================
+    // MONTHLY DONATION DATA
+    // ==============================
+
+    $monthlyDonations = FoodDonation::where('donor_id', $donorId)
+        ->whereYear('created_at', now()->year)
+        ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get();
+
+
+    // ==============================
+    // RECENT DONATIONS
+    // ==============================
+
+    $recentDonations = FoodDonation::where('donor_id', $donorId)
+        ->with('category')
+        ->latest()
+        ->take(5)
+        ->get();
+
+
+    return view('donor.dashboard', [
+
+        'totalDonations' => $totalDonations,
+        'availableDonations' => $availableDonations,
+        'claimedDonations' => $claimedDonations,
+        'completedDonations' => $completedDonations,
+        'expiredDonations' => $expiredDonations,
+
+        'monthlyDonations' => $monthlyDonations,
+
+        'recentDonations' => $recentDonations,
+
+    ]);
+}
 
     public function receiver(): View
     {
