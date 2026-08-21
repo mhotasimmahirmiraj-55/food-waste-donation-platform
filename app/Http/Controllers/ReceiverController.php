@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Claim;
 use App\Models\FoodDonation;
+use App\Models\Report;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -179,6 +180,32 @@ class ReceiverController extends Controller
         ]);
 
         return view('receiver.claims.show', compact('claim'));
+    }
+
+    public function reportIssue(Request $request, Claim $claim): RedirectResponse
+    {
+        abort_unless($claim->receiver_id === auth()->id(), 403);
+
+        $request->validate([
+            'reason' => 'required|string|min:10|max:1000',
+        ]);
+
+        $claim->load('foodDonation.donor');
+
+        if (!$claim->foodDonation || !$claim->foodDonation->donor) {
+            return back()->with('error', 'The donor information could not be found.');
+        }
+
+        Report::create([
+            'reporter_id' => auth()->id(),
+            'reported_user_id' => $claim->foodDonation->donor->id,
+            'reason' => $request->reason,
+            'status' => 'pending',
+        ]);
+
+        return redirect()
+            ->route('receiver.claims.show', $claim)
+            ->with('success', 'Your issue has been reported successfully. An administrator will review it.');
     }
 
     public function cancelClaim(Claim $claim): RedirectResponse

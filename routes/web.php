@@ -145,6 +145,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->middleware('role:volunteer')
     ->name('volunteer.dashboard');
 
+    Route::post('/receiver/claims/{claim}/report',
+    [ReceiverController::class, 'reportIssue']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.claims.report');
+
 
 
     // =========================
