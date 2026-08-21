@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FoodDonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReceiverController;
+use App\Http\Controllers\ReceiverRatingController;
 use App\Http\Controllers\ReceiverBookmarkController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -132,6 +133,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     )
     ->middleware('role:receiver')
     ->name('receiver.claims.show');
+
+    Route::post('/receiver/claims/{claim}/rate',
+        [ReceiverRatingController::class, 'store']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.claims.rate');
 
     Route::patch('/receiver/claims/{claim}/cancel',
         [ReceiverController::class, 'cancelClaim']

@@ -90,6 +90,99 @@
                     </div>
                 @endif
 
+                @if ($claim->status === 'completed')
+
+                    @php
+                        $hasRated = $claim->delivery
+                            ? \App\Models\Rating::where('delivery_id', $claim->delivery->id)
+                                ->where('giver_id', auth()->id())
+                                ->exists()
+                            : false;
+                    @endphp
+
+                    <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+
+                        <h3 class="text-lg font-bold text-yellow-800">
+                            Rate the Donor
+                        </h3>
+
+                        @if ($hasRated)
+
+                            <p class="mt-2 text-sm text-yellow-700">
+                                You have already rated this donation. Thank you for your feedback!
+                            </p>
+
+                        @else
+
+                            <p class="mt-1 text-sm text-yellow-700">
+                                How was your experience with this donation?
+                            </p>
+
+                            <form
+                                method="POST"
+                                action="{{ route('receiver.claims.rate', $claim) }}"
+                                class="mt-4"
+                            >
+                                @csrf
+
+                                <div>
+                                    <label
+                                        for="rating"
+                                        class="block text-sm font-medium text-gray-700"
+                                    >
+                                        Rating
+                                    </label>
+
+                                    <select
+                                        id="rating"
+                                        name="rating"
+                                        required
+                                        class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+                                    >
+                                        <option value="">Select rating</option>
+                                        <option value="5">★★★★★ — Excellent</option>
+                                        <option value="4">★★★★ — Good</option>
+                                        <option value="3">★★★ — Average</option>
+                                        <option value="2">★★ — Poor</option>
+                                        <option value="1">★ — Very Poor</option>
+                                    </select>
+                                </div>
+
+                                <div class="mt-4">
+
+                                    <label
+                                        for="review"
+                                        class="block text-sm font-medium text-gray-700"
+                                    >
+                                        Review <span class="text-gray-400">(Optional)</span>
+                                    </label>
+
+                                    <textarea
+                                        id="review"
+                                        name="review"
+                                        rows="4"
+                                        maxlength="1000"
+                                        class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+                                        placeholder="Share your experience with the donor..."
+                                    ></textarea>
+
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    class="mt-4 rounded-lg bg-yellow-500 px-5 py-2.5 text-white hover:bg-yellow-600"
+                                >
+                                    Submit Rating
+                                </button>
+
+                            </form>
+
+                        @endif
+
+                    </div>
+
+                @endif
+
                 <div class="mt-8 bg-red-50 border border-red-200 rounded-lg p-6">
                     <h3 class="text-lg font-bold text-red-800">
                         Report an Issue
