@@ -24,6 +24,105 @@
                             Browse Food
                         </a>
                     </div>
+                        {{-- Search and Filter --}}
+
+                        <form
+                            method="GET"
+                            action="{{ route('receiver.claims') }}"
+                            class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4"
+                        >
+                            {{-- Search --}}
+
+                            <div>
+                                <label
+                                    for="search"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
+                                    Search Donation
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="search"
+                                    name="search"
+                                    value="{{ request('search') }}"
+                                    placeholder="Search by donation title..."
+                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                >
+                            </div>
+
+                            {{-- Status Filter --}}
+
+                            <div>
+                                <label
+                                    for="status"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
+                                    Status
+                                </label>
+
+                                <select
+                                    id="status"
+                                    name="status"
+                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                >
+                                    <option value="">All Statuses</option>
+
+                                    <option
+                                        value="pending"
+                                        {{ request('status') === 'pending' ? 'selected' : '' }}
+                                    >
+                                        Pending
+                                    </option>
+
+                                    <option
+                                        value="approved"
+                                        {{ request('status') === 'approved' ? 'selected' : '' }}
+                                    >
+                                        Accepted
+                                    </option>
+
+                                    <option
+                                        value="completed"
+                                        {{ request('status') === 'completed' ? 'selected' : '' }}
+                                    >
+                                        Delivered
+                                    </option>
+
+                                    <option
+                                        value="rejected"
+                                        {{ request('status') === 'rejected' ? 'selected' : '' }}
+                                    >
+                                        Rejected
+                                    </option>
+
+                                    <option
+                                        value="cancelled"
+                                        {{ request('status') === 'cancelled' ? 'selected' : '' }}
+                                    >
+                                        Cancelled
+                                    </option>
+                                </select>
+                            </div>
+
+                            {{-- Buttons --}}
+
+                            <div class="flex items-end gap-2">
+                                <button
+                                    type="submit"
+                                    class="rounded-lg bg-gray-800 px-5 py-2.5 text-white hover:bg-gray-900"
+                                >
+                                    Search
+                                </button>
+
+                                <a
+                                    href="{{ route('receiver.claims') }}"
+                                    class="rounded-lg bg-gray-200 px-5 py-2.5 text-gray-800 hover:bg-gray-300"
+                                >
+                                    Clear
+                                </a>
+                            </div>
+                        </form>
                 </div>
 
                 <div class="divide-y">

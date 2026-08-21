@@ -159,12 +159,29 @@ class ReceiverController extends Controller
             ->with('success', 'Food donation claimed successfully. Your request is pending approval.');
     }
 
-    public function claims(): View
+    public function claims(Request $request): View
     {
-        $claims = Claim::with(['foodDonation', 'delivery'])
-            ->where('receiver_id', auth()->id())
+        $query = Claim::with(['foodDonation', 'delivery'])
+            ->where('receiver_id', auth()->id());
+
+        // Search by donation title
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+
+            $query->whereHas('foodDonation', function ($builder) use ($search) {
+                $builder->where('title', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by claim status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $claims = $query
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return view('receiver.claims.index', compact('claims'));
     }
