@@ -37,6 +37,46 @@
             via-teal-50
             to-cyan-100
             py-8">
+        @if(session('success'))
+
+    <div class="max-w-7xl mx-auto px-8 mb-6">
+
+        <div class="flex items-center gap-3
+                    rounded-2xl
+                    border border-emerald-200
+                    bg-emerald-50
+                    px-5 py-4
+                    text-emerald-700
+                    shadow-sm">
+
+            <div class="flex-shrink-0
+                        w-9 h-9
+                        rounded-full
+                        bg-emerald-100
+                        flex items-center
+                        justify-center">
+
+                ✓
+
+            </div>
+
+            <div>
+
+                <p class="font-semibold">
+                    {{ session('success') }}
+                </p>
+
+                <p class="text-xs text-emerald-600 mt-0.5">
+                    Your action was completed successfully.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+@endif
 
         <div class="max-w-7xl mx-auto px-8">
 
@@ -783,19 +823,24 @@
                         </a>
 
 
-                        <a href="{{ route('profile.edit') }}"
-                           class="px-4 py-2.5
-                                  rounded-xl
-                                  bg-gray-100
-                                  text-gray-700
-                                  text-sm
-                                  font-semibold
-                                  hover:bg-gray-200
-                                  transition">
+                        <a href="{{ route('donations.report.page') }}"
+   class="inline-flex items-center gap-2
+          px-4 py-2.5
+          rounded-xl
+          bg-red-50
+          text-red-700
+          text-sm
+          font-semibold
+          hover:bg-red-100
+          transition">
 
-                            Profile
+    <span>
+        🚨
+    </span>
 
-                        </a>
+    Report Donation
+
+</a>
 
                     </div>
 

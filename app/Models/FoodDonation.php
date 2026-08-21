@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\FoodCategory;
+use App\Models\FoodDonationItem;
+use App\Models\Report;
 
 class FoodDonation extends Model
 {
@@ -31,16 +34,22 @@ class FoodDonation extends Model
 
 
     // Category relationship
-    public function category()
-    {
-        return $this->belongsTo(FoodCategory::class, 'food_category_id');
-    }
-    // Donation items relationship
+  public function category()
+{
+    return $this->belongsTo(FoodCategory::class, 'food_category_id');
+}
+
+// Donation items relationship
 public function items()
 {
     return $this->hasMany(FoodDonationItem::class, 'food_donation_id');
 }
 
+// Donation reports relationship
+public function reports()
+{
+    return $this->hasMany(Report::class, 'food_donation_id');
+}
     // Claims relationship
     public function claims()
     {

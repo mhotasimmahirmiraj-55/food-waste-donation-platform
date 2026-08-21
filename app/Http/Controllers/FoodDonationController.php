@@ -26,48 +26,51 @@ class FoodDonationController extends Controller
     // MY DONATIONS
     // ==========================================
 
-    public function index()
-    {
-        $donations = FoodDonation::with('items.foodCategory')
-            ->where('donor_id', auth()->id())
-            ->get();
-
-        return view('donations.index', compact('donations'));
-    }
-
-
-    // ==========================================
-    // EDIT DONATIONS LIST
-    // ==========================================
-
-   public function editDonations()
+   public function index()
 {
     $donations = FoodDonation::where('donor_id', auth()->id())
+        ->orderBy('created_at', 'desc')
         ->get();
 
-    // Expired donations automatically update হবে
-    foreach ($donations as $donation) {
-        if ($donation->status === 'available' && $donation->expiry_time < now()) {
-            $donation->update([
-                'status' => 'expired',
-            ]);
-        }
-    }
-
-    return view('donations.edit-index', compact('donations'));
+    return view('donations.index', compact('donations'));
 }
 
 
+// ==========================================
+// EDIT DONATIONS LIST
+// ==========================================
+
+public function editDonations()
+{
+    // Expired available donations automatically update হবে
+    FoodDonation::where('donor_id', auth()->id())
+        ->where('status', 'available')
+        ->where('expiry_time', '<', now())
+        ->update([
+            'status' => 'expired',
+        ]);
+
+    // শুধু AVAILABLE donations দেখাবে
+    $donations = FoodDonation::with('items.foodCategory')
+        ->where('donor_id', auth()->id())
+        ->where('status', 'available')
+        ->get();
+
+    return view('donations.edit-index', compact('donations'));
+}
     // ==========================================
     // DELETE DONATIONS LIST
     // ==========================================
 
-    public function deleteDonations()
-    {
-        $donations = FoodDonation::where('donor_id', auth()->id())->get();
+   public function deleteDonations()
+{
+    $donations = FoodDonation::where('donor_id', auth()->id())
+        ->orderByRaw("CASE WHEN status = 'available' THEN 0 ELSE 1 END")
+        ->latest()
+        ->get();
 
-        return view('donations.delete-index', compact('donations'));
-    }
+    return view('donations.delete-index', compact('donations'));
+}
 
 
     // ==========================================

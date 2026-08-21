@@ -11,6 +11,7 @@ use App\Http\Controllers\FoodDonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReceiverController;
 use App\Http\Controllers\ReceiverBookmarkController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -332,11 +333,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->middleware('role:admin')
     ->name('admin.deliveries.release');
 
-    // =========================
-    // Donation Routes
-    // =========================
+// =========================
+// Donation Report
+// =========================
 
+Route::post('/donations/{donationId}/report',
+    [ReportController::class, 'store']
+)
+->middleware('role:donor')
+->name('donations.report');
 
+Route::get('/donor/reports',
+    [ReportController::class, 'create']
+)
+->middleware('role:donor')
+->name('donations.report.page');
 
     // Create Donation Page
 
