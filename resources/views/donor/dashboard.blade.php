@@ -1032,7 +1032,11 @@
                                            text-sm
                                            text-gray-500">
 
-                                    {{ $donation->category->name ?? 'N/A' }}
+ @if($donation->items->isNotEmpty())
+    {{ $donation->items->map(fn($item) => $item->foodCategory?->name)->filter()->unique()->implode(', ') }}
+@else
+    N/A
+@endif
 
                                 </td>
 
@@ -1041,7 +1045,11 @@
                                            text-sm
                                            text-gray-600">
 
-                                    {{ $donation->quantity }}
+                                    @if($donation->items->isNotEmpty())
+    {{ $donation->items->map(fn($item) => $item->quantity . ' ' . $item->unit)->implode(', ') }}
+@else
+    N/A
+@endif
 
                                 </td>
 
