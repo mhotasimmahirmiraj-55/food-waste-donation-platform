@@ -11,6 +11,7 @@ use App\Http\Controllers\FoodDonationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReceiverController;
 use App\Http\Controllers\ReceiverRatingController;
+use App\Http\Controllers\VolunteerController;
 use App\Http\Controllers\ReceiverBookmarkController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -152,6 +153,40 @@ Route::middleware(['auth', 'verified'])->group(function () {
     )
     ->middleware('role:volunteer')
     ->name('volunteer.dashboard');
+
+    // =========================
+    // Volunteer Module Routes
+    // =========================
+
+    Route::get('/volunteer/deliveries',
+        [VolunteerController::class, 'index']
+    )
+    ->middleware('role:volunteer')
+    ->name('volunteer.deliveries');
+
+    Route::get('/volunteer/deliveries/{delivery}',
+        [VolunteerController::class, 'show']
+    )
+    ->middleware('role:volunteer')
+    ->name('volunteer.deliveries.show');
+
+    Route::post('/volunteer/deliveries/{delivery}/accept',
+        [VolunteerController::class, 'accept']
+    )
+    ->middleware('role:volunteer')
+    ->name('volunteer.deliveries.accept');
+
+    Route::patch('/volunteer/deliveries/{delivery}/status',
+        [VolunteerController::class, 'updateStatus']
+    )
+    ->middleware('role:volunteer')
+    ->name('volunteer.deliveries.status');
+
+    Route::post('/volunteer/deliveries/{delivery}/proof',
+        [VolunteerController::class, 'storeProof']
+    )
+    ->middleware('role:volunteer')
+    ->name('volunteer.deliveries.proof');
 
     Route::post('/receiver/claims/{claim}/report',
     [ReceiverController::class, 'reportIssue']

@@ -280,7 +280,49 @@ class DashboardController extends Controller
 
 
     public function volunteer(): View
-    {
-        return view('volunteer.dashboard');
-    }
+{
+    $volunteerId = auth()->id();
+
+    $availableDeliveries = Delivery::where('status', 'pending')
+        ->whereNull('volunteer_id')
+        ->count();
+
+    $myDeliveries = Delivery::where('volunteer_id', $volunteerId)
+        ->count();
+
+    $activeDeliveries = Delivery::where('volunteer_id', $volunteerId)
+        ->whereIn('status', ['accepted', 'picked_up'])
+        ->count();
+
+    $completedDeliveries = Delivery::where('volunteer_id', $volunteerId)
+        ->where('status', 'delivered')
+        ->count();
+
+    $availableAssignments = Delivery::with([
+        'claim.foodDonation',
+        'claim.receiver',
+    ])
+        ->where('status', 'pending')
+        ->whereNull('volunteer_id')
+        ->latest()
+        ->get();
+
+    $recentDeliveries = Delivery::where('volunteer_id', $volunteerId)
+        ->with([
+            'claim.foodDonation',
+            'claim.receiver',
+        ])
+        ->latest()
+        ->take(5)
+        ->get();
+
+    return view('volunteer.dashboard', [
+        'availableDeliveries' => $availableDeliveries,
+        'myDeliveries' => $myDeliveries,
+        'activeDeliveries' => $activeDeliveries,
+        'completedDeliveries' => $completedDeliveries,
+        'availableAssignments' => $availableAssignments,
+        'recentDeliveries' => $recentDeliveries,
+    ]);
+}
 }
