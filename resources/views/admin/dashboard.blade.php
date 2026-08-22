@@ -1,39 +1,112 @@
 <x-app-layout>
 
+    {{--
+    ============================================================================
+    MVC: VIEW
+    ============================================================================
+
+    This Blade file is responsible for presenting the Admin Dashboard.
+
+    It receives data from DashboardController.
+
+    Example:
+
+        Controller:
+            $totalUsers = User::count();
+
+        Controller sends:
+            'totalUsers' => $totalUsers
+
+        Blade receives:
+            $totalUsers
+
+        Blade displays:
+            {{ $totalUsers }}
+
+    The Blade file should mainly handle presentation,
+    while database queries are handled by the Controller/Model.
+    --}}
+
+
+    {{-- ================================================================ --}}
+    {{-- PAGE HEADER --}}
+    {{-- ================================================================ --}}
+
     <x-slot name="header">
+
         <div class="flex items-center justify-between">
 
             <div>
-                <h2 class="text-2xl font-bold tracking-tight text-gray-900">
-                    Admin Dashboard
-                </h2>
 
-                <p class="mt-1 text-sm text-gray-500">
-                    Overview of your food-waste donation platform
-                </p>
+                <div class="flex items-center gap-3">
+
+                    <div class="w-1.5 h-8 rounded-full bg-emerald-500"></div>
+
+                    <div>
+
+                        <h2 class="text-2xl font-bold tracking-tight text-gray-900">
+                            Admin Dashboard
+                        </h2>
+
+                        <p class="mt-1 text-sm text-gray-500">
+                            Overview of your food-waste donation platform
+                        </p>
+
+                    </div>
+
+                </div>
+
             </div>
 
+
+            {{-- System status indicator --}}
+
             <div class="hidden sm:flex items-center gap-2 text-sm text-gray-500">
+
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+
                 System Overview
+
             </div>
 
         </div>
+
     </x-slot>
 
 
-    <div class="min-h-screen bg-slate-50">
+    {{-- ================================================================ --}}
+    {{-- MAIN DASHBOARD CONTAINER --}}
+    {{-- ================================================================ --}}
+
+    <div class="min-h-screen bg-gradient-to-br from-emerald-100 via-teal-50 to-cyan-100">
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+
+            {{--
+            =========================================================================
+            MVC / FRONT-END: ALPINE.JS STATE
+            =========================================================================
+
+            x-data creates a small Alpine.js state object.
+
+            sidebarOpen starts as true.
+
+            When it becomes false, the sidebar collapses.
+
+            This is front-end behaviour, so it does not require
+            a request to the Laravel Controller.
+            --}}
 
             <div
                 x-data="{ sidebarOpen: true }"
                 class="flex flex-col lg:flex-row gap-8"
             >
 
-                {{-- ================================================= --}}
-                {{-- SIDEBAR --}}
-                {{-- ================================================= --}}
+
+                {{-- ============================================================ --}}
+                {{-- ADMIN SIDEBAR --}}
+                {{-- ============================================================ --}}
 
                 <aside
                     class="flex-shrink-0 transition-all duration-300"
@@ -42,10 +115,12 @@
 
                     <div class="lg:sticky lg:top-6">
 
-                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+
 
                             {{-- Sidebar Header --}}
-                            <div class="px-3 py-4 border-b border-gray-100">
+
+                            <div class="px-3 py-5 border-b border-gray-100">
 
                                 <div class="flex items-center justify-between gap-2">
 
@@ -70,11 +145,28 @@
                                     </div>
 
 
-                                    {{-- Sidebar Toggle --}}
+                                    {{--
+                                    =================================================================
+                                    ALPINE.JS SIDEBAR TOGGLE
+                                    =================================================================
+
+                                    @click runs when the button is clicked.
+
+                                    sidebarOpen = !sidebarOpen
+
+                                    means:
+
+                                    true  → false
+                                    false → true
+
+                                    This changes the sidebar state without
+                                    reloading the page.
+                                    --}}
+
                                     <button
                                         type="button"
                                         @click="sidebarOpen = !sidebarOpen"
-                                        class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 flex items-center justify-center transition"
+                                        class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-100 text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 flex items-center justify-center transition"
                                         :title="sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'"
                                     >
 
@@ -102,16 +194,42 @@
                             </div>
 
 
-                            {{-- Navigation --}}
+                            {{-- ================================================= --}}
+                            {{-- SIDEBAR NAVIGATION --}}
+                            {{-- ================================================= --}}
+
                             <nav class="p-3 space-y-1">
 
-                                {{-- Users --}}
+
+                                {{--
+                                =================================================================
+                                MVC: ROUTING
+                                =================================================================
+
+                                route('admin.users') refers to a named Laravel route.
+
+                                When the Admin clicks this link:
+
+                                    Browser
+                                       ↓
+                                    Laravel Route
+                                       ↓
+                                    Admin User Controller
+                                       ↓
+                                    User Management View
+
+                                The URL itself is not hardcoded here.
+                                Laravel generates it from the route name.
+                                --}}
+
+                                {{-- Manage Users --}}
+
                                 <a
                                     href="{{ route('admin.users') }}"
                                     class="group flex items-center gap-3 px-3 py-3 rounded-xl justify-center lg:justify-start text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition"
                                 >
 
-                                    <span class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                                    <span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100 flex items-center justify-center flex-shrink-0">
 
                                         <svg
                                             class="w-5 h-5"
@@ -142,13 +260,14 @@
                                 </a>
 
 
-                                {{-- Donations --}}
+                                {{-- Manage Donations --}}
+
                                 <a
                                     href="{{ route('admin.donations') }}"
                                     class="group flex items-center gap-3 px-3 py-3 rounded-xl justify-center lg:justify-start text-gray-600 hover:bg-green-50 hover:text-green-700 transition"
                                 >
 
-                                    <span class="w-9 h-9 rounded-lg bg-green-50 text-green-600 group-hover:bg-green-100 flex items-center justify-center flex-shrink-0">
+                                    <span class="w-9 h-9 rounded-xl bg-green-50 text-green-600 group-hover:bg-green-100 flex items-center justify-center flex-shrink-0">
 
                                         <svg
                                             class="w-5 h-5"
@@ -179,13 +298,14 @@
                                 </a>
 
 
-                                {{-- Categories --}}
+                                {{-- Food Categories --}}
+
                                 <a
                                     href="{{ route('admin.categories') }}"
                                     class="group flex items-center gap-3 px-3 py-3 rounded-xl justify-center lg:justify-start text-gray-600 hover:bg-purple-50 hover:text-purple-700 transition"
                                 >
 
-                                    <span class="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 group-hover:bg-purple-100 flex items-center justify-center flex-shrink-0">
+                                    <span class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 group-hover:bg-purple-100 flex items-center justify-center flex-shrink-0">
 
                                         <svg
                                             class="w-5 h-5"
@@ -217,12 +337,13 @@
 
 
                                 {{-- Reports --}}
+
                                 <a
                                     href="{{ route('admin.reports') }}"
                                     class="group flex items-center gap-3 px-3 py-3 rounded-xl justify-center lg:justify-start text-gray-600 hover:bg-rose-50 hover:text-rose-700 transition"
                                 >
 
-                                    <span class="w-9 h-9 rounded-lg bg-rose-50 text-rose-600 group-hover:bg-rose-100 flex items-center justify-center flex-shrink-0">
+                                    <span class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 group-hover:bg-rose-100 flex items-center justify-center flex-shrink-0">
 
                                         <svg
                                             class="w-5 h-5"
@@ -254,12 +375,13 @@
 
 
                                 {{-- Claims --}}
+
                                 <a
                                     href="{{ route('admin.claims') }}"
                                     class="group flex items-center gap-3 px-3 py-3 rounded-xl justify-center lg:justify-start text-gray-600 hover:bg-indigo-50 hover:text-indigo-700 transition"
                                 >
 
-                                    <span class="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                                    <span class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100 flex items-center justify-center flex-shrink-0">
 
                                         <svg
                                             class="w-5 h-5"
@@ -291,12 +413,13 @@
 
 
                                 {{-- Deliveries --}}
+
                                 <a
                                     href="{{ route('admin.deliveries') }}"
                                     class="group flex items-center gap-3 px-3 py-3 rounded-xl justify-center lg:justify-start text-gray-600 hover:bg-orange-50 hover:text-orange-700 transition"
                                 >
 
-                                    <span class="w-9 h-9 rounded-lg bg-orange-50 text-orange-600 group-hover:bg-orange-100 flex items-center justify-center flex-shrink-0">
+                                    <span class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 group-hover:bg-orange-100 flex items-center justify-center flex-shrink-0">
 
                                         <svg
                                             class="w-5 h-5"
@@ -335,41 +458,52 @@
                 </aside>
 
 
-                {{-- ================================================= --}}
+
+                {{-- ============================================================ --}}
                 {{-- MAIN CONTENT --}}
-                {{-- ================================================= --}}
+                {{-- ============================================================ --}}
 
                 <main class="flex-1 min-w-0">
 
 
-                    {{-- Welcome Banner --}}
-                    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 shadow-xl mb-8">
+                    {{-- ================================================= --}}
+                    {{-- WELCOME BANNER --}}
+                    {{-- ================================================= --}}
+
+                    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-800 via-emerald-600 to-teal-500 shadow-xl mb-8">
 
                         <div class="absolute inset-0 opacity-10">
 
-                            <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-emerald-400"></div>
+                            <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-white"></div>
 
-                            <div class="absolute -bottom-32 -left-20 w-80 h-80 rounded-full bg-indigo-400"></div>
+                            <div class="absolute -bottom-32 -left-20 w-80 h-80 rounded-full bg-cyan-200"></div>
 
                         </div>
 
-                        <div class="relative px-6 py-8 sm:px-8">
 
-                            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 text-emerald-300 text-xs font-semibold uppercase tracking-wider">
+                        <div class="relative px-6 py-9 sm:px-8">
 
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 text-emerald-100 text-xs font-semibold uppercase tracking-wider">
+
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
 
                                 Administration
 
                             </div>
 
-                            <h1 class="mt-4 text-3xl font-bold text-white tracking-tight">
-                                Welcome back, Admin
+
+                            <h1 class="mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+
+                                Welcome back, Admin 👋
+
                             </h1>
 
-                            <p class="mt-3 text-sm sm:text-base text-slate-300 max-w-2xl">
+
+                            <p class="mt-3 text-sm sm:text-base text-emerald-50 max-w-2xl leading-relaxed">
+
                                 Monitor your platform and keep the food redistribution
                                 process running smoothly.
+
                             </p>
 
                         </div>
@@ -377,10 +511,14 @@
                     </div>
 
 
-                    {{-- Analytics Header --}}
+
+                    {{-- ================================================= --}}
+                    {{-- ANALYTICS HEADER --}}
+                    {{-- ================================================= --}}
+
                     <div class="mb-5">
 
-                        <h3 class="text-lg font-bold text-gray-900">
+                        <h3 class="text-xl font-bold text-gray-800">
                             Platform Analytics
                         </h3>
 
@@ -391,17 +529,34 @@
                     </div>
 
 
+
                     {{-- ================================================= --}}
                     {{-- PRIMARY ANALYTICS --}}
                     {{-- ================================================= --}}
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
 
 
-                        {{-- Total Users --}}
+                        {{--
+                        =====================================================================
+                        TOTAL USERS CARD
+                        =====================================================================
+
+                        $totalUsers comes from DashboardController.
+
+                        The Controller calculated:
+
+                            User::count()
+
+                        The View only displays the result.
+
+                        This demonstrates MVC separation:
+                            Model → Controller → View
+                        --}}
+
                         <a
                             href="{{ route('admin.users') }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-emerald-200 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-emerald-200 transition-all duration-300"
                         >
 
                             <div class="flex items-start justify-between">
@@ -422,7 +577,8 @@
 
                                 </div>
 
-                                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+
+                                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -444,17 +600,32 @@
 
                             </div>
 
+
                             <div class="mt-4 text-xs font-semibold text-emerald-600 opacity-0 group-hover:opacity-100 transition">
+
                                 View users →
+
                             </div>
 
                         </a>
 
 
-                        {{-- Total Donations --}}
+
+                        {{--
+                        =====================================================================
+                        TOTAL DONATIONS CARD
+                        =====================================================================
+
+                        $totalDonations comes from:
+
+                            FoodDonation::count()
+
+                        This represents the total number of food donation records.
+                        --}}
+
                         <a
                             href="{{ route('admin.donations') }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-green-200 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-green-200 transition-all duration-300"
                         >
 
                             <div class="flex items-start justify-between">
@@ -475,7 +646,8 @@
 
                                 </div>
 
-                                <div class="w-11 h-11 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
+
+                                <div class="w-11 h-11 rounded-xl bg-green-50 text-green-600 flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -497,17 +669,32 @@
 
                             </div>
 
+
                             <div class="mt-4 text-xs font-semibold text-green-600 opacity-0 group-hover:opacity-100 transition">
+
                                 View donations →
+
                             </div>
 
                         </a>
 
 
-                        {{-- Total Claims --}}
+
+                        {{--
+                        =====================================================================
+                        TOTAL CLAIMS CARD
+                        =====================================================================
+
+                        $totalClaims comes from:
+
+                            Claim::count()
+
+                        The claim data itself is handled by the Claim Model.
+                        --}}
+
                         <a
                             href="{{ route('admin.claims') }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-indigo-200 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-indigo-200 transition-all duration-300"
                         >
 
                             <div class="flex items-start justify-between">
@@ -528,7 +715,8 @@
 
                                 </div>
 
-                                <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+
+                                <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -550,17 +738,32 @@
 
                             </div>
 
+
                             <div class="mt-4 text-xs font-semibold text-indigo-600 opacity-0 group-hover:opacity-100 transition">
+
                                 View claims →
+
                             </div>
 
                         </a>
 
 
-                        {{-- Total Reports --}}
+
+                        {{--
+                        =====================================================================
+                        TOTAL REPORTS CARD
+                        =====================================================================
+
+                        $totalReports comes from:
+
+                            Report::count()
+
+                        Reports are stored in the reports table.
+                        --}}
+
                         <a
                             href="{{ route('admin.reports') }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-rose-200 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-rose-200 transition-all duration-300"
                         >
 
                             <div class="flex items-start justify-between">
@@ -581,7 +784,8 @@
 
                                 </div>
 
-                                <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+
+                                <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:bg-rose-600 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -603,8 +807,11 @@
 
                             </div>
 
+
                             <div class="mt-4 text-xs font-semibold text-rose-600 opacity-0 group-hover:opacity-100 transition">
+
                                 View reports →
+
                             </div>
 
                         </a>
@@ -612,22 +819,55 @@
                     </div>
 
 
+
                     {{-- ================================================= --}}
-                    {{-- SECONDARY ANALYTICS --}}
+                    {{-- USER OVERVIEW --}}
                     {{-- ================================================= --}}
+
+                    <div class="mb-5">
+
+                        <h3 class="text-xl font-bold text-gray-800">
+                            User Overview
+                        </h3>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            View users by role and account status.
+                        </p>
+
+                    </div>
+
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
 
 
-                        {{-- Admins --}}
+                        {{--
+                        =====================================================================
+                        TOTAL ADMINS
+                        =====================================================================
+
+                        role_id = 1 represents Admin.
+
+                        The dashboard count comes from:
+
+                            User::where('role_id', 1)->count()
+
+                        The link also sends role_id=1 to User Management.
+
+                        Example URL:
+
+                            /admin/users?role_id=1
+
+                        This allows User Management to display only Admin users.
+                        --}}
+
                         <a
                             href="{{ route('admin.users', ['role_id' => 1]) }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-slate-200 transition-all duration-300"
                         >
 
                             <div class="flex items-center gap-4">
 
-                                <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center">
+                                <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:bg-slate-700 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -647,6 +887,7 @@
 
                                 </div>
 
+
                                 <div class="flex-1">
 
                                     <p class="text-sm text-gray-500">
@@ -659,6 +900,7 @@
 
                                 </div>
 
+
                                 <span class="text-gray-300 group-hover:text-slate-600 text-lg">
                                     →
                                 </span>
@@ -668,15 +910,29 @@
                         </a>
 
 
-                        {{-- Donors --}}
+
+                        {{--
+                        =====================================================================
+                        TOTAL DONORS
+                        =====================================================================
+
+                        role_id = 2 represents Donor.
+
+                        The DashboardController counts them using:
+
+                            User::where('role_id', 2)->count()
+
+                        The route passes role_id=2 to User Management.
+                        --}}
+
                         <a
                             href="{{ route('admin.users', ['role_id' => 2]) }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-emerald-200 transition-all duration-300"
                         >
 
                             <div class="flex items-center gap-4">
 
-                                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -696,6 +952,7 @@
 
                                 </div>
 
+
                                 <div class="flex-1">
 
                                     <p class="text-sm text-gray-500">
@@ -708,6 +965,7 @@
 
                                 </div>
 
+
                                 <span class="text-gray-300 group-hover:text-emerald-600 text-lg">
                                     →
                                 </span>
@@ -717,15 +975,23 @@
                         </a>
 
 
-                        {{-- Receivers --}}
+
+                        {{--
+                        =====================================================================
+                        TOTAL RECEIVERS
+                        =====================================================================
+
+                        role_id = 3 represents Receiver.
+                        --}}
+
                         <a
                             href="{{ route('admin.users', ['role_id' => 3]) }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-200 transition-all duration-300"
                         >
 
                             <div class="flex items-center gap-4">
 
-                                <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -745,6 +1011,7 @@
 
                                 </div>
 
+
                                 <div class="flex-1">
 
                                     <p class="text-sm text-gray-500">
@@ -757,6 +1024,7 @@
 
                                 </div>
 
+
                                 <span class="text-gray-300 group-hover:text-blue-600 text-lg">
                                     →
                                 </span>
@@ -766,15 +1034,23 @@
                         </a>
 
 
-                        {{-- Volunteers --}}
+
+                        {{--
+                        =====================================================================
+                        TOTAL VOLUNTEERS
+                        =====================================================================
+
+                        role_id = 4 represents Volunteer.
+                        --}}
+
                         <a
                             href="{{ route('admin.users', ['role_id' => 4]) }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-amber-200 transition-all duration-300"
                         >
 
                             <div class="flex items-center gap-4">
 
-                                <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -794,6 +1070,7 @@
 
                                 </div>
 
+
                                 <div class="flex-1">
 
                                     <p class="text-sm text-gray-500">
@@ -806,6 +1083,7 @@
 
                                 </div>
 
+
                                 <span class="text-gray-300 group-hover:text-amber-600 text-lg">
                                     →
                                 </span>
@@ -815,15 +1093,34 @@
                         </a>
 
 
-                        {{-- Blocked Users --}}
+
+                        {{--
+                        =====================================================================
+                        BLOCKED USERS
+                        =====================================================================
+
+                        The Controller counts:
+
+                            User::where('status', 'blocked')->count()
+
+                        The link sends:
+
+                            status=blocked
+
+                        to User Management.
+
+                        Therefore the same User Management page can be reused
+                        for different filters.
+                        --}}
+
                         <a
                             href="{{ route('admin.users', ['status' => 'blocked']) }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-red-200 transition-all duration-300"
                         >
 
                             <div class="flex items-center gap-4">
 
-                                <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center">
+                                <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -843,6 +1140,7 @@
 
                                 </div>
 
+
                                 <div class="flex-1">
 
                                     <p class="text-sm text-gray-500">
@@ -855,6 +1153,7 @@
 
                                 </div>
 
+
                                 <span class="text-gray-300 group-hover:text-red-600 text-lg">
                                     →
                                 </span>
@@ -864,15 +1163,27 @@
                         </a>
 
 
-                        {{-- Categories --}}
+
+                        {{--
+                        =====================================================================
+                        FOOD CATEGORIES
+                        =====================================================================
+
+                        $totalCategories comes from:
+
+                            FoodCategory::count()
+
+                        Clicking this card opens the Category Management page.
+                        --}}
+
                         <a
                             href="{{ route('admin.categories') }}"
-                            class="group bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+                            class="group bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-purple-200 transition-all duration-300"
                         >
 
                             <div class="flex items-center gap-4">
 
-                                <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                                <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition">
 
                                     <svg
                                         class="w-5 h-5"
@@ -892,6 +1203,7 @@
 
                                 </div>
 
+
                                 <div class="flex-1">
 
                                     <p class="text-sm text-gray-500">
@@ -903,6 +1215,7 @@
                                     </p>
 
                                 </div>
+
 
                                 <span class="text-gray-300 group-hover:text-purple-600 text-lg">
                                     →
