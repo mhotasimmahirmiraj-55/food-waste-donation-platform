@@ -135,13 +135,14 @@ class DashboardController extends Controller
         // RECENT ACTIVITY
         // ==============================
 
-        $recentDonations = FoodDonation::with([
-            'donor',
-            'category',
-        ])
-            ->latest()
-            ->take(5)
-            ->get();
+   $recentDonations = FoodDonation::with([
+    'donor',
+    'category',
+    'items.foodCategory',
+])
+    ->latest()
+    ->take(5)
+    ->get();
 
 
         $recentClaims = Claim::with([
