@@ -22,7 +22,7 @@
                         </p>
                     </div>
 
-                    <a href="{{ route('volunteer.deliveries') }}"
+                    <a href="{{ route('volunteer.deliveries.index') }}">
                        class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">
                         ← Back to Deliveries
                     </a>

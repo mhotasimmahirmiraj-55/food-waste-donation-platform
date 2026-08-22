@@ -22,7 +22,7 @@
                         </p>
                     </div>
 
-                    <a href="{{ route('volunteer.deliveries') }}"
+                    <a href="{{ route('volunteer.deliveries.index') }}"
                        class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
                         View Deliveries →
                     </a>
@@ -181,7 +181,7 @@
                         </p>
                     </div>
 
-                    <a href="{{ route('volunteer.deliveries') }}"
+                    <a href="{{ route('volunteer.deliveries.index') }}">
                        class="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
                         View all →
                     </a>
@@ -291,7 +291,7 @@
                         </p>
                     </div>
 
-                    <a href="{{ route('volunteer.deliveries') }}"
+                    <a href="{{ route('volunteer.deliveries.index') }}">
                        class="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
                         View all →
                     </a>

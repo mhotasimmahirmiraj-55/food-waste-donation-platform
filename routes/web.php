@@ -162,7 +162,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         [VolunteerController::class, 'index']
     )
     ->middleware('role:volunteer')
-    ->name('volunteer.deliveries');
+    ->name('volunteer.deliveries.index');
 
     Route::get('/volunteer/deliveries/{delivery}',
         [VolunteerController::class, 'show']
@@ -188,13 +188,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->middleware('role:volunteer')
     ->name('volunteer.deliveries.proof');
 
+
+    // Receiver route — KEEP THIS
     Route::post('/receiver/claims/{claim}/report',
-    [ReceiverController::class, 'reportIssue']
+        [ReceiverController::class, 'reportIssue']
     )
     ->middleware('role:receiver')
     ->name('receiver.claims.report');
-
-
 
     // =========================
     // User Management Routes
@@ -522,11 +522,3 @@ Route::get('/donor/reports',
 require __DIR__ . '/auth.php';
 
 
-// Volunteer Routes
-Route::middleware(['auth', 'role:volunteer'])->prefix('volunteer')->name('volunteer.')->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\VolunteerController::class, 'dashboard'])->name('dashboard');
-    Route::get('/deliveries', [App\Http\Controllers\VolunteerController::class, 'index'])->name('deliveries.index');
-    Route::get('/deliveries/{id}', [App\Http\Controllers\VolunteerController::class, 'show'])->name('deliveries.show');
-    Route::post('/deliveries/{id}/accept', [App\Http\Controllers\VolunteerController::class, 'accept'])->name('deliveries.accept');
-    Route::post('/deliveries/{id}/update-status', [App\Http\Controllers\VolunteerController::class, 'updateStatus'])->name('deliveries.update-status');
-});
