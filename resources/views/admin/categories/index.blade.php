@@ -10,15 +10,15 @@
                     Food Categories
                 </h2>
 
-                <p class="mt-1 text-sm text-gray-500">
+                <p class="mt-1 text-sm text-emerald-800">
                     Organize the types of food available on the platform.
                 </p>
 
             </div>
 
-            <div class="hidden sm:flex items-center gap-2 text-sm text-gray-500">
+            <div class="hidden sm:flex items-center gap-2 text-sm text-emerald-800">
 
-                <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
 
                 Category Management
 
@@ -29,7 +29,12 @@
     </x-slot>
 
 
-    <div class="min-h-screen bg-slate-50">
+    {{-- ================================================= --}}
+    {{-- MAIN PAGE --}}
+    {{-- Darker emerald theme --}}
+    {{-- ================================================= --}}
+
+    <div class="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-green-100">
 
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -46,7 +51,7 @@
                         Food Categories
                     </h1>
 
-                    <p class="mt-1 text-sm text-gray-500">
+                    <p class="mt-1 text-sm text-emerald-800">
                         Create and maintain food donation categories.
                     </p>
 
@@ -54,9 +59,23 @@
 
 
                 {{-- Total Categories --}}
-                <div class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-5 py-3 shadow-sm">
 
-                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                <div
+                    class="inline-flex items-center gap-3
+                           bg-white
+                           border border-emerald-200
+                           rounded-2xl
+                           px-5 py-3
+                           shadow-sm"
+                >
+
+                    <div
+                        class="w-10 h-10 rounded-xl
+                               bg-emerald-100
+                               text-emerald-800
+                               border border-emerald-200
+                               flex items-center justify-center"
+                    >
 
                         <svg
                             class="w-5 h-5"
@@ -76,6 +95,7 @@
 
                     </div>
 
+
                     <div>
 
                         <p class="text-xs font-medium text-gray-500">
@@ -93,16 +113,25 @@
             </div>
 
 
+
             {{-- ================================================= --}}
-            {{-- FLASH MESSAGES --}}
+            {{-- SUCCESS MESSAGE --}}
             {{-- ================================================= --}}
 
             @if (session('success'))
 
-                <div class="mb-6 flex items-start gap-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3">
+                <div
+                    class="mb-6 flex items-start gap-3
+                           rounded-xl
+                           bg-emerald-100
+                           border border-emerald-200
+                           text-emerald-900
+                           px-4 py-3
+                           shadow-sm"
+                >
 
                     <svg
-                        class="w-5 h-5 mt-0.5 flex-shrink-0"
+                        class="w-5 h-5 mt-0.5 flex-shrink-0 text-emerald-700"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -126,12 +155,25 @@
             @endif
 
 
+
+            {{-- ================================================= --}}
+            {{-- ERROR MESSAGE --}}
+            {{-- ================================================= --}}
+
             @if (session('error'))
 
-                <div class="mb-6 flex items-start gap-3 rounded-xl bg-red-50 border border-red-200 text-red-800 px-4 py-3">
+                <div
+                    class="mb-6 flex items-start gap-3
+                           rounded-xl
+                           bg-red-50
+                           border border-red-200
+                           text-red-800
+                           px-4 py-3
+                           shadow-sm"
+                >
 
                     <svg
-                        class="w-5 h-5 mt-0.5 flex-shrink-0"
+                        class="w-5 h-5 mt-0.5 flex-shrink-0 text-red-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -155,15 +197,30 @@
             @endif
 
 
+
             {{-- ================================================= --}}
             {{-- CATEGORY CARD --}}
             {{-- ================================================= --}}
 
-            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div
+                class="bg-white
+                       rounded-2xl
+                       border border-emerald-200
+                       shadow-sm
+                       overflow-hidden"
+            >
 
 
                 {{-- Card Header --}}
-                <div class="px-6 py-5 border-b border-gray-100">
+
+                <div
+                    class="px-6 py-5
+                           border-b border-emerald-200
+                           bg-gradient-to-r
+                           from-emerald-100
+                           via-white
+                           to-green-100"
+                >
 
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
@@ -173,7 +230,7 @@
                                 Category List
                             </h3>
 
-                            <p class="mt-1 text-sm text-gray-500">
+                            <p class="mt-1 text-sm text-gray-600">
                                 Manage the categories used when creating food donations.
                             </p>
 
@@ -181,9 +238,19 @@
 
 
                         {{-- Add Category --}}
+
                         <a
                             href="{{ route('admin.categories.create') }}"
-                            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-semibold hover:bg-purple-700 transition shadow-sm"
+                            class="inline-flex items-center justify-center gap-2
+                                   px-4 py-2.5
+                                   rounded-xl
+                                   bg-emerald-700
+                                   text-white
+                                   text-sm
+                                   font-semibold
+                                   hover:bg-emerald-800
+                                   transition
+                                   shadow-sm"
                         >
 
                             <svg
@@ -211,23 +278,32 @@
                 </div>
 
 
+
                 {{-- ================================================= --}}
                 {{-- CATEGORY LIST --}}
                 {{-- ================================================= --}}
 
-                <div class="divide-y divide-gray-100">
+                <div class="divide-y divide-emerald-100">
 
                     @forelse ($categories as $category)
 
-                        <div class="px-6 py-4 hover:bg-slate-50/70 transition">
+                        <div class="px-6 py-4 hover:bg-emerald-100/70 transition">
 
                             <div class="flex items-center justify-between gap-4">
 
 
                                 {{-- Category Information --}}
+
                                 <div class="flex items-center gap-4 min-w-0">
 
-                                    <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
+                                    <div
+                                        class="w-11 h-11 rounded-xl
+                                               bg-emerald-100
+                                               text-emerald-800
+                                               border border-emerald-200
+                                               flex items-center justify-center
+                                               flex-shrink-0"
+                                    >
 
                                         <svg
                                             class="w-5 h-5"
@@ -263,12 +339,26 @@
                                 </div>
 
 
+
                                 {{-- Actions --}}
+
                                 <div class="flex items-center gap-2 flex-shrink-0">
+
+
+                                    {{-- Edit --}}
 
                                     <a
                                         href="{{ route('admin.categories.edit', $category) }}"
-                                        class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-semibold transition"
+                                        class="inline-flex items-center gap-1.5
+                                               px-3 py-2
+                                               rounded-lg
+                                               bg-emerald-100
+                                               text-emerald-800
+                                               border border-emerald-200
+                                               hover:bg-emerald-200
+                                               text-xs
+                                               font-semibold
+                                               transition"
                                     >
 
                                         <svg
@@ -292,6 +382,9 @@
                                     </a>
 
 
+
+                                    {{-- Delete --}}
+
                                     <form
                                         action="{{ route('admin.categories.destroy', $category) }}"
                                         method="POST"
@@ -300,12 +393,20 @@
                                     >
 
                                         @csrf
-
                                         @method('DELETE')
 
                                         <button
                                             type="submit"
-                                            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 text-xs font-semibold transition"
+                                            class="inline-flex items-center gap-1.5
+                                                   px-3 py-2
+                                                   rounded-lg
+                                                   bg-red-50
+                                                   text-red-700
+                                                   border border-red-100
+                                                   hover:bg-red-100
+                                                   text-xs
+                                                   font-semibold
+                                                   transition"
                                         >
 
                                             <svg
@@ -338,12 +439,21 @@
 
                     @empty
 
-                        {{-- Empty State --}}
+                        {{-- ================================================= --}}
+                        {{-- EMPTY STATE --}}
+                        {{-- ================================================= --}}
+
                         <div class="px-6 py-20">
 
                             <div class="flex flex-col items-center text-center">
 
-                                <div class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center">
+                                <div
+                                    class="w-16 h-16 rounded-2xl
+                                           bg-emerald-100
+                                           text-emerald-700
+                                           border border-emerald-200
+                                           flex items-center justify-center"
+                                >
 
                                     <svg
                                         class="w-8 h-8"
@@ -376,7 +486,15 @@
 
                                 <a
                                     href="{{ route('admin.categories.create') }}"
-                                    class="mt-5 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-semibold hover:bg-purple-700 transition"
+                                    class="mt-5 inline-flex items-center gap-2
+                                           px-4 py-2.5
+                                           rounded-xl
+                                           bg-emerald-700
+                                           text-white
+                                           text-sm
+                                           font-semibold
+                                           hover:bg-emerald-800
+                                           transition"
                                 >
 
                                     <svg
@@ -408,13 +526,18 @@
                 </div>
 
 
+
                 {{-- ================================================= --}}
                 {{-- PAGINATION --}}
                 {{-- ================================================= --}}
 
                 @if ($categories->hasPages())
 
-                    <div class="px-6 py-4 border-t border-gray-100">
+                    <div
+                        class="px-6 py-4
+                               border-t border-emerald-200
+                               bg-emerald-100/50"
+                    >
 
                         {{ $categories->links() }}
 
@@ -425,15 +548,28 @@
             </div>
 
 
+
             {{-- ================================================= --}}
             {{-- INFORMATION CARD --}}
             {{-- ================================================= --}}
 
-            <div class="mt-6 rounded-2xl border border-purple-100 bg-purple-50/60 px-5 py-4">
+            <div
+                class="mt-6
+                       rounded-2xl
+                       border border-emerald-200
+                       bg-emerald-100/70
+                       px-5 py-4"
+            >
 
                 <div class="flex items-start gap-3">
 
-                    <div class="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0">
+                    <div
+                        class="w-9 h-9 rounded-lg
+                               bg-emerald-200
+                               text-emerald-800
+                               flex items-center justify-center
+                               flex-shrink-0"
+                    >
 
                         <svg
                             class="w-5 h-5"
@@ -453,13 +589,14 @@
 
                     </div>
 
+
                     <div>
 
-                        <p class="text-sm font-semibold text-purple-900">
+                        <p class="text-sm font-semibold text-emerald-900">
                             Category deletion policy
                         </p>
 
-                        <p class="mt-1 text-sm text-purple-700">
+                        <p class="mt-1 text-sm text-emerald-800">
                             Categories that are currently being used by food donations
                             cannot be deleted.
                         </p>

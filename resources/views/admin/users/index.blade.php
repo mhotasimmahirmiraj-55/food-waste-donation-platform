@@ -10,7 +10,7 @@
                     User Management
                 </h2>
 
-                <p class="mt-1 text-sm text-gray-500">
+                <p class="mt-1 text-sm text-emerald-800">
                     Manage platform users, roles and account access
                 </p>
 
@@ -21,7 +21,12 @@
     </x-slot>
 
 
-    <div class="min-h-screen bg-slate-50">
+    {{-- ================================================= --}}
+    {{-- MAIN PAGE --}}
+    {{-- Darker emerald/green background theme --}}
+    {{-- ================================================= --}}
+
+    <div class="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-green-100">
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -40,7 +45,7 @@
                             Administrators
                         </h1>
 
-                        <p class="mt-1 text-sm text-gray-500">
+                        <p class="mt-1 text-sm text-emerald-800">
                             Showing users with the Administrator role.
                         </p>
 
@@ -50,7 +55,7 @@
                             Donors
                         </h1>
 
-                        <p class="mt-1 text-sm text-gray-500">
+                        <p class="mt-1 text-sm text-emerald-800">
                             Showing users registered as donors.
                         </p>
 
@@ -60,7 +65,7 @@
                             Receivers
                         </h1>
 
-                        <p class="mt-1 text-sm text-gray-500">
+                        <p class="mt-1 text-sm text-emerald-800">
                             Showing users registered as receivers.
                         </p>
 
@@ -70,7 +75,7 @@
                             Volunteers
                         </h1>
 
-                        <p class="mt-1 text-sm text-gray-500">
+                        <p class="mt-1 text-sm text-emerald-800">
                             Showing users registered as volunteers.
                         </p>
 
@@ -80,7 +85,7 @@
                             Blocked Users
                         </h1>
 
-                        <p class="mt-1 text-sm text-gray-500">
+                        <p class="mt-1 text-sm text-red-600">
                             Showing users whose accounts are currently blocked.
                         </p>
 
@@ -90,7 +95,7 @@
                             All Users
                         </h1>
 
-                        <p class="mt-1 text-sm text-gray-500">
+                        <p class="mt-1 text-sm text-gray-600">
                             View and manage all registered users.
                         </p>
 
@@ -100,11 +105,22 @@
 
 
                 {{-- Clear Filter --}}
+
                 @if (request('role') || request('status'))
 
                     <a
                         href="{{ route('admin.users') }}"
-                        class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition shadow-sm"
+                        class="inline-flex items-center justify-center gap-2
+                               px-4 py-2.5
+                               rounded-xl
+                               bg-white
+                               border border-emerald-200
+                               text-sm font-semibold
+                               text-emerald-800
+                               hover:bg-emerald-100
+                               hover:border-emerald-300
+                               transition
+                               shadow-sm"
                     >
 
                         <svg
@@ -132,16 +148,25 @@
             </div>
 
 
+
             {{-- ================================================= --}}
-            {{-- SUCCESS / ERROR MESSAGES --}}
+            {{-- SUCCESS MESSAGE --}}
             {{-- ================================================= --}}
 
             @if (session('success'))
 
-                <div class="mb-6 flex items-start gap-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3">
+                <div
+                    class="mb-6 flex items-start gap-3
+                           rounded-xl
+                           bg-emerald-100
+                           border border-emerald-200
+                           text-emerald-900
+                           px-4 py-3
+                           shadow-sm"
+                >
 
                     <svg
-                        class="w-5 h-5 mt-0.5 flex-shrink-0"
+                        class="w-5 h-5 mt-0.5 flex-shrink-0 text-emerald-700"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -165,12 +190,25 @@
             @endif
 
 
+
+            {{-- ================================================= --}}
+            {{-- ERROR MESSAGE --}}
+            {{-- ================================================= --}}
+
             @if (session('error'))
 
-                <div class="mb-6 flex items-start gap-3 rounded-xl bg-red-50 border border-red-200 text-red-800 px-4 py-3">
+                <div
+                    class="mb-6 flex items-start gap-3
+                           rounded-xl
+                           bg-red-50
+                           border border-red-200
+                           text-red-800
+                           px-4 py-3
+                           shadow-sm"
+                >
 
                     <svg
-                        class="w-5 h-5 mt-0.5 flex-shrink-0"
+                        class="w-5 h-5 mt-0.5 flex-shrink-0 text-red-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -194,15 +232,32 @@
             @endif
 
 
+
             {{-- ================================================= --}}
             {{-- USER TABLE CARD --}}
             {{-- ================================================= --}}
 
-            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div
+                class="bg-white
+                       rounded-2xl
+                       border border-emerald-200
+                       shadow-sm
+                       overflow-hidden"
+            >
 
 
-                {{-- Table Header --}}
-                <div class="px-6 py-5 border-b border-gray-100">
+                {{-- ================================================= --}}
+                {{-- TABLE HEADER --}}
+                {{-- ================================================= --}}
+
+                <div
+                    class="px-6 py-5
+                           border-b border-emerald-200
+                           bg-gradient-to-r
+                           from-emerald-100
+                           via-white
+                           to-green-100"
+                >
 
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 
@@ -212,25 +267,44 @@
                                 User Accounts
                             </h3>
 
-                            <p class="mt-1 text-sm text-gray-500">
+                            <p class="mt-1 text-sm text-gray-600">
 
                                 @if (request('role') === 'Admin')
-                                    {{ $users->total() }} administrator{{ $users->total() == 1 ? '' : 's' }} found.
+
+                                    {{ $users->total() }}
+                                    administrator{{ $users->total() == 1 ? '' : 's' }}
+                                    found.
 
                                 @elseif (request('role') === 'Donor')
-                                    {{ $users->total() }} donor{{ $users->total() == 1 ? '' : 's' }} found.
+
+                                    {{ $users->total() }}
+                                    donor{{ $users->total() == 1 ? '' : 's' }}
+                                    found.
 
                                 @elseif (request('role') === 'Receiver')
-                                    {{ $users->total() }} receiver{{ $users->total() == 1 ? '' : 's' }} found.
+
+                                    {{ $users->total() }}
+                                    receiver{{ $users->total() == 1 ? '' : 's' }}
+                                    found.
 
                                 @elseif (request('role') === 'Volunteer')
-                                    {{ $users->total() }} volunteer{{ $users->total() == 1 ? '' : 's' }} found.
+
+                                    {{ $users->total() }}
+                                    volunteer{{ $users->total() == 1 ? '' : 's' }}
+                                    found.
 
                                 @elseif (request('status') === 'blocked')
-                                    {{ $users->total() }} blocked user{{ $users->total() == 1 ? '' : 's' }} found.
+
+                                    {{ $users->total() }}
+                                    blocked user{{ $users->total() == 1 ? '' : 's' }}
+                                    found.
 
                                 @else
-                                    {{ $users->total() }} user{{ $users->total() == 1 ? '' : 's' }} registered.
+
+                                    {{ $users->total() }}
+                                    user{{ $users->total() == 1 ? '' : 's' }}
+                                    registered.
+
                                 @endif
 
                             </p>
@@ -239,11 +313,19 @@
 
 
                         {{-- Active Filter --}}
+
                         @if (request('role') || request('status'))
 
-                            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                            <div
+                                class="inline-flex items-center gap-2
+                                       px-3 py-1.5
+                                       rounded-full
+                                       bg-emerald-200
+                                       text-emerald-900
+                                       text-xs font-semibold"
+                            >
 
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
 
                                 Filter active
 
@@ -256,6 +338,7 @@
                 </div>
 
 
+
                 {{-- ================================================= --}}
                 {{-- TABLE --}}
                 {{-- ================================================= --}}
@@ -264,31 +347,89 @@
 
                     <table class="min-w-full">
 
-                        <thead class="bg-slate-50 border-b border-gray-200">
+
+                        {{-- ================================================= --}}
+                        {{-- TABLE HEADER --}}
+                        {{-- ================================================= --}}
+
+                        <thead class="bg-emerald-100 border-b border-emerald-200">
 
                             <tr>
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                <th
+                                    class="px-6 py-4
+                                           text-left
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     ID
                                 </th>
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+
+                                <th
+                                    class="px-6 py-4
+                                           text-left
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     User
                                 </th>
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+
+                                <th
+                                    class="px-6 py-4
+                                           text-left
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Email
                                 </th>
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+
+                                <th
+                                    class="px-6 py-4
+                                           text-left
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Role
                                 </th>
 
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+
+                                <th
+                                    class="px-6 py-4
+                                           text-center
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Status
                                 </th>
 
-                                <th class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
+
+                                <th
+                                    class="px-6 py-4
+                                           text-right
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Actions
                                 </th>
 
@@ -297,29 +438,48 @@
                         </thead>
 
 
-                        <tbody class="divide-y divide-gray-100">
+
+                        {{-- ================================================= --}}
+                        {{-- TABLE BODY --}}
+                        {{-- ================================================= --}}
+
+                        <tbody class="divide-y divide-emerald-100">
 
                             @forelse ($users as $user)
 
-                                <tr class="hover:bg-slate-50/70 transition">
+                                <tr class="hover:bg-emerald-100/70 transition">
 
 
+                                    {{-- ================================================= --}}
                                     {{-- ID --}}
+                                    {{-- ================================================= --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
-                                        <span class="text-sm font-medium text-gray-500">
+                                        <span class="text-sm font-medium text-emerald-800">
                                             #{{ $user->id }}
                                         </span>
 
                                     </td>
 
 
-                                    {{-- User --}}
+
+                                    {{-- ================================================= --}}
+                                    {{-- USER --}}
+                                    {{-- ================================================= --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         <div class="flex items-center gap-3">
 
-                                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-sm">
+                                            <div
+                                                class="w-10 h-10 rounded-xl
+                                                       bg-emerald-100
+                                                       text-emerald-800
+                                                       border border-emerald-200
+                                                       flex items-center justify-center
+                                                       font-bold text-sm"
+                                            >
 
                                                 {{ strtoupper(substr($user->name, 0, 1)) }}
 
@@ -343,7 +503,11 @@
                                     </td>
 
 
-                                    {{-- Email --}}
+
+                                    {{-- ================================================= --}}
+                                    {{-- EMAIL --}}
+                                    {{-- ================================================= --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         <span class="text-sm text-gray-600">
@@ -353,24 +517,48 @@
                                     </td>
 
 
-                                    {{-- Role --}}
+
+                                    {{-- ================================================= --}}
+                                    {{-- ROLE --}}
+                                    {{-- ================================================= --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         @if ($user->role)
 
                                             @php
+
                                                 $roleName = strtolower($user->role->name);
 
                                                 $roleClasses = match ($roleName) {
-                                                    'admin' => 'bg-slate-100 text-slate-700',
-                                                    'donor' => 'bg-emerald-50 text-emerald-700',
-                                                    'receiver' => 'bg-blue-50 text-blue-700',
-                                                    'volunteer' => 'bg-amber-50 text-amber-700',
-                                                    default => 'bg-gray-100 text-gray-700',
+
+                                                    'admin' =>
+                                                        'bg-slate-100 text-slate-700',
+
+                                                    'donor' =>
+                                                        'bg-emerald-100 text-emerald-800 border border-emerald-200',
+
+                                                    'receiver' =>
+                                                        'bg-blue-50 text-blue-700',
+
+                                                    'volunteer' =>
+                                                        'bg-amber-50 text-amber-700',
+
+                                                    default =>
+                                                        'bg-gray-100 text-gray-700',
+
                                                 };
+
                                             @endphp
 
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold {{ $roleClasses }}">
+
+                                            <span
+                                                class="inline-flex items-center
+                                                       px-2.5 py-1
+                                                       rounded-full
+                                                       text-xs font-semibold
+                                                       {{ $roleClasses }}"
+                                            >
 
                                                 {{ $user->role->name }}
 
@@ -387,14 +575,30 @@
                                     </td>
 
 
-                                    {{-- Status --}}
+
+                                    {{-- ================================================= --}}
+                                    {{-- STATUS --}}
+                                    {{-- ================================================= --}}
+
                                     <td class="px-6 py-4 text-center whitespace-nowrap">
 
                                         @if ($user->status === 'active')
 
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                       px-2.5 py-1
+                                                       rounded-full
+                                                       bg-emerald-100
+                                                       text-emerald-800
+                                                       border border-emerald-200
+                                                       text-xs font-semibold"
+                                            >
 
-                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                <span
+                                                    class="w-1.5 h-1.5
+                                                           rounded-full
+                                                           bg-emerald-600"
+                                                ></span>
 
                                                 Active
 
@@ -402,9 +606,21 @@
 
                                         @else
 
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-xs font-semibold">
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                       px-2.5 py-1
+                                                       rounded-full
+                                                       bg-red-50
+                                                       text-red-700
+                                                       border border-red-100
+                                                       text-xs font-semibold"
+                                            >
 
-                                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                                <span
+                                                    class="w-1.5 h-1.5
+                                                           rounded-full
+                                                           bg-red-500"
+                                                ></span>
 
                                                 Blocked
 
@@ -415,16 +631,31 @@
                                     </td>
 
 
-                                    {{-- Actions --}}
+
+                                    {{-- ================================================= --}}
+                                    {{-- ACTIONS --}}
+                                    {{-- ================================================= --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         <div class="flex items-center justify-end gap-2">
 
 
-                                            {{-- Edit --}}
+                                            {{-- ================================================= --}}
+                                            {{-- EDIT --}}
+                                            {{-- ================================================= --}}
+
                                             <a
                                                 href="{{ route('admin.users.edit', $user) }}"
-                                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold transition"
+                                                class="inline-flex items-center gap-1.5
+                                                       px-3 py-2
+                                                       rounded-lg
+                                                       bg-emerald-100
+                                                       text-emerald-800
+                                                       border border-emerald-200
+                                                       hover:bg-emerald-200
+                                                       text-xs font-semibold
+                                                       transition"
                                             >
 
                                                 <svg
@@ -448,7 +679,11 @@
                                             </a>
 
 
-                                            {{-- Block / Unblock --}}
+
+                                            {{-- ================================================= --}}
+                                            {{-- BLOCK / UNBLOCK --}}
+                                            {{-- ================================================= --}}
+
                                             <form
                                                 action="{{ route('admin.users.toggle-status', $user) }}"
                                                 method="POST"
@@ -460,15 +695,21 @@
                                                 @method('PUT')
 
 
-                                                <button
-                                                    type="submit"
-                                                    class="{{ $user->status === 'active'
-                                                        ? 'bg-red-50 text-red-700 hover:bg-red-100'
-                                                        : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' }}
-                                                        inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition"
-                                                >
+                                                @if ($user->status === 'active')
 
-                                                    @if ($user->status === 'active')
+                                                    <button
+                                                        type="submit"
+                                                        class="inline-flex items-center gap-1.5
+                                                               px-3 py-2
+                                                               rounded-lg
+                                                               bg-red-50
+                                                               text-red-700
+                                                               border border-red-100
+                                                               hover:bg-red-100
+                                                               text-xs font-semibold
+                                                               transition"
+                                                        onclick="return confirm('Are you sure you want to block this user?')"
+                                                    >
 
                                                         <svg
                                                             class="w-4 h-4"
@@ -481,14 +722,30 @@
                                                                 stroke-linecap="round"
                                                                 stroke-linejoin="round"
                                                                 stroke-width="1.8"
-                                                                d="M18 8A6 6 0 016 8m-2 0a8 8 0 0016 0M6 16l-2 2m14-2l2 2"
+                                                                d="M6 6l12 12M6 18L18 6M12 3a9 9 0 100 18 9 9 0 000-18z"
                                                             />
 
                                                         </svg>
 
                                                         Block
 
-                                                    @else
+                                                    </button>
+
+                                                @else
+
+                                                    <button
+                                                        type="submit"
+                                                        class="inline-flex items-center gap-1.5
+                                                               px-3 py-2
+                                                               rounded-lg
+                                                               bg-emerald-100
+                                                               text-emerald-800
+                                                               border border-emerald-200
+                                                               hover:bg-emerald-200
+                                                               text-xs font-semibold
+                                                               transition"
+                                                        onclick="return confirm('Are you sure you want to unblock this user?')"
+                                                    >
 
                                                         <svg
                                                             class="w-4 h-4"
@@ -501,16 +758,16 @@
                                                                 stroke-linecap="round"
                                                                 stroke-linejoin="round"
                                                                 stroke-width="1.8"
-                                                                d="M9 12l2 2 4-4m5-5a9 9 0 11-16 6"
+                                                                d="M5 13l4 4L19 7"
                                                             />
 
                                                         </svg>
 
                                                         Unblock
 
-                                                    @endif
+                                                    </button>
 
-                                                </button>
+                                                @endif
 
                                             </form>
 
@@ -520,15 +777,30 @@
 
                                 </tr>
 
+
                             @empty
+
+                                {{-- ================================================= --}}
+                                {{-- NO USERS --}}
+                                {{-- ================================================= --}}
 
                                 <tr>
 
-                                    <td colspan="6" class="px-6 py-16 text-center">
+                                    <td
+                                        colspan="6"
+                                        class="px-6 py-16 text-center"
+                                    >
 
                                         <div class="flex flex-col items-center">
 
-                                            <div class="w-14 h-14 rounded-2xl bg-gray-100 text-gray-400 flex items-center justify-center">
+
+                                            <div
+                                                class="w-14 h-14 rounded-2xl
+                                                       bg-emerald-100
+                                                       text-emerald-700
+                                                       border border-emerald-200
+                                                       flex items-center justify-center"
+                                            >
 
                                                 <svg
                                                     class="w-7 h-7"
@@ -563,7 +835,7 @@
 
                                                 <a
                                                     href="{{ route('admin.users') }}"
-                                                    class="mt-4 text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+                                                    class="mt-4 text-sm font-semibold text-emerald-700 hover:text-emerald-900"
                                                 >
                                                     Clear filter
                                                 </a>
@@ -585,13 +857,18 @@
                 </div>
 
 
+
                 {{-- ================================================= --}}
                 {{-- PAGINATION --}}
                 {{-- ================================================= --}}
 
                 @if ($users->hasPages())
 
-                    <div class="px-6 py-4 border-t border-gray-100">
+                    <div
+                        class="px-6 py-4
+                               border-t border-emerald-200
+                               bg-emerald-100/50"
+                    >
 
                         {{ $users->withQueryString()->links() }}
 

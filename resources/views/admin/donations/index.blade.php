@@ -14,15 +14,16 @@
                     Donation Management
                 </h2>
 
-                <p class="mt-1 text-sm text-gray-500">
+                <p class="mt-1 text-sm text-emerald-800">
                     Monitor and manage food donations across the platform.
                 </p>
 
             </div>
 
-            <div class="hidden sm:flex items-center gap-2 text-sm text-gray-500">
 
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <div class="hidden sm:flex items-center gap-2 text-sm text-emerald-800">
+
+                <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
 
                 Donation Operations
 
@@ -33,7 +34,12 @@
     </x-slot>
 
 
-    <div class="min-h-screen bg-slate-50">
+    {{-- ================================================= --}}
+    {{-- MAIN PAGE --}}
+    {{-- Darker emerald theme --}}
+    {{-- ================================================= --}}
+
+    <div class="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-green-100">
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -50,7 +56,7 @@
                         Donation Operations
                     </h1>
 
-                    <p class="mt-1 text-sm text-gray-500">
+                    <p class="mt-1 text-sm text-emerald-800">
                         Review donated food, donors, quantities and availability.
                     </p>
 
@@ -58,9 +64,23 @@
 
 
                 {{-- Total Donations --}}
-                <div class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-2xl px-5 py-3 shadow-sm">
 
-                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <div
+                    class="inline-flex items-center gap-3
+                           bg-white
+                           border border-emerald-200
+                           rounded-2xl
+                           px-5 py-3
+                           shadow-sm"
+                >
+
+                    <div
+                        class="w-10 h-10 rounded-xl
+                               bg-emerald-100
+                               text-emerald-800
+                               border border-emerald-200
+                               flex items-center justify-center"
+                    >
 
                         <svg
                             class="w-5 h-5"
@@ -80,6 +100,7 @@
 
                     </div>
 
+
                     <div>
 
                         <p class="text-xs font-medium text-gray-500">
@@ -97,16 +118,25 @@
             </div>
 
 
+
             {{-- ================================================= --}}
             {{-- FLASH MESSAGE --}}
             {{-- ================================================= --}}
 
             @if (session('success'))
 
-                <div class="mb-6 flex items-start gap-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3">
+                <div
+                    class="mb-6 flex items-start gap-3
+                           rounded-xl
+                           bg-emerald-100
+                           border border-emerald-200
+                           text-emerald-900
+                           px-4 py-3
+                           shadow-sm"
+                >
 
                     <svg
-                        class="w-5 h-5 mt-0.5 flex-shrink-0"
+                        class="w-5 h-5 mt-0.5 flex-shrink-0 text-emerald-700"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -130,15 +160,30 @@
             @endif
 
 
+
             {{-- ================================================= --}}
             {{-- DONATION CARD --}}
             {{-- ================================================= --}}
 
-            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div
+                class="bg-white
+                       rounded-2xl
+                       border border-emerald-200
+                       shadow-sm
+                       overflow-hidden"
+            >
 
 
                 {{-- Card Header --}}
-                <div class="px-6 py-5 border-b border-gray-100">
+
+                <div
+                    class="px-6 py-5
+                           border-b border-emerald-200
+                           bg-gradient-to-r
+                           from-emerald-100
+                           via-white
+                           to-green-100"
+                >
 
                     <div>
 
@@ -146,7 +191,7 @@
                             Donation Records
                         </h3>
 
-                        <p class="mt-1 text-sm text-gray-500">
+                        <p class="mt-1 text-sm text-gray-600">
                             Manage active, claimed and completed donations.
                         </p>
 
@@ -155,41 +200,65 @@
                 </div>
 
 
+
                 {{-- ================================================= --}}
                 {{-- STATUS FILTERS --}}
                 {{-- ================================================= --}}
 
-                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/60">
+                <div
+                    class="px-6 py-4
+                           border-b border-emerald-200
+                           bg-emerald-100/50"
+                >
 
                     <div class="flex flex-wrap items-center gap-2">
 
 
                         {{-- All --}}
+
                         <a
                             href="{{ route('admin.donations') }}"
-                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition
-                                {{ !request('status')
-                                    ? 'bg-slate-900 text-white shadow-sm'
-                                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100' }}"
+                            class="inline-flex items-center gap-2
+                                   px-4 py-2
+                                   rounded-xl
+                                   text-sm font-semibold
+                                   transition
+                                   {{
+                                       !request('status')
+                                           ? 'bg-emerald-800 text-white shadow-sm'
+                                           : 'bg-white text-gray-600 border border-emerald-200 hover:bg-emerald-100 hover:text-emerald-800'
+                                   }}"
                         >
+
                             All
+
                         </a>
 
 
+
                         {{-- Available --}}
+
                         <a
                             href="{{ route('admin.donations', ['status' => 'available']) }}"
-                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition
-                                {{ request('status') === 'available'
-                                    ? 'bg-emerald-600 text-white shadow-sm'
-                                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-emerald-50 hover:text-emerald-700' }}"
+                            class="inline-flex items-center gap-2
+                                   px-4 py-2
+                                   rounded-xl
+                                   text-sm font-semibold
+                                   transition
+                                   {{
+                                       request('status') === 'available'
+                                           ? 'bg-emerald-700 text-white shadow-sm'
+                                           : 'bg-white text-gray-600 border border-emerald-200 hover:bg-emerald-100 hover:text-emerald-800'
+                                   }}"
                         >
 
                             <span
                                 class="w-2 h-2 rounded-full
-                                    {{ request('status') === 'available'
-                                        ? 'bg-white'
-                                        : 'bg-emerald-500' }}"
+                                    {{
+                                        request('status') === 'available'
+                                            ? 'bg-white'
+                                            : 'bg-emerald-600'
+                                    }}"
                             ></span>
 
                             Available
@@ -197,20 +266,30 @@
                         </a>
 
 
+
                         {{-- Claimed --}}
+
                         <a
                             href="{{ route('admin.donations', ['status' => 'claimed']) }}"
-                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition
-                                {{ request('status') === 'claimed'
-                                    ? 'bg-amber-500 text-white shadow-sm'
-                                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-amber-50 hover:text-amber-700' }}"
+                            class="inline-flex items-center gap-2
+                                   px-4 py-2
+                                   rounded-xl
+                                   text-sm font-semibold
+                                   transition
+                                   {{
+                                       request('status') === 'claimed'
+                                           ? 'bg-amber-600 text-white shadow-sm'
+                                           : 'bg-white text-gray-600 border border-gray-200 hover:bg-amber-50 hover:text-amber-700'
+                                   }}"
                         >
 
                             <span
                                 class="w-2 h-2 rounded-full
-                                    {{ request('status') === 'claimed'
-                                        ? 'bg-white'
-                                        : 'bg-amber-500' }}"
+                                    {{
+                                        request('status') === 'claimed'
+                                            ? 'bg-white'
+                                            : 'bg-amber-500'
+                                    }}"
                             ></span>
 
                             Claimed
@@ -218,20 +297,30 @@
                         </a>
 
 
+
                         {{-- Completed --}}
+
                         <a
                             href="{{ route('admin.donations', ['status' => 'completed']) }}"
-                            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition
-                                {{ request('status') === 'completed'
-                                    ? 'bg-blue-600 text-white shadow-sm'
-                                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-blue-50 hover:text-blue-700' }}"
+                            class="inline-flex items-center gap-2
+                                   px-4 py-2
+                                   rounded-xl
+                                   text-sm font-semibold
+                                   transition
+                                   {{
+                                       request('status') === 'completed'
+                                           ? 'bg-blue-700 text-white shadow-sm'
+                                           : 'bg-white text-gray-600 border border-gray-200 hover:bg-blue-50 hover:text-blue-700'
+                                   }}"
                         >
 
                             <span
                                 class="w-2 h-2 rounded-full
-                                    {{ request('status') === 'completed'
-                                        ? 'bg-white'
-                                        : 'bg-blue-500' }}"
+                                    {{
+                                        request('status') === 'completed'
+                                            ? 'bg-white'
+                                            : 'bg-blue-500'
+                                    }}"
                             ></span>
 
                             Completed
@@ -243,6 +332,7 @@
                 </div>
 
 
+
                 {{-- ================================================= --}}
                 {{-- TABLE --}}
                 {{-- ================================================= --}}
@@ -251,35 +341,94 @@
 
                     <table class="min-w-full">
 
-                        <thead class="bg-slate-50 border-b border-gray-200">
+
+                        {{-- Table Header --}}
+
+                        <thead class="bg-emerald-100 border-b border-emerald-200">
 
                             <tr>
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                <th
+                                    class="px-6 py-4
+                                           text-left
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Donation
                                 </th>
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                <th
+                                    class="px-6 py-4
+                                           text-left
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Donor
                                 </th>
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                <th
+                                    class="px-6 py-4
+                                           text-left
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Category
                                 </th>
 
-                                <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                <th
+                                    class="px-6 py-4
+                                           text-center
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Quantity
                                 </th>
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                <th
+                                    class="px-6 py-4
+                                           text-left
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Status
                                 </th>
 
-                                <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                <th
+                                    class="px-6 py-4
+                                           text-left
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Expiry
                                 </th>
 
-                                <th class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                <th
+                                    class="px-6 py-4
+                                           text-right
+                                           text-xs
+                                           font-semibold
+                                           uppercase
+                                           tracking-wider
+                                           text-emerald-900"
+                                >
                                     Actions
                                 </th>
 
@@ -288,19 +437,29 @@
                         </thead>
 
 
-                        <tbody class="divide-y divide-gray-100">
+
+                        {{-- Table Body --}}
+
+                        <tbody class="divide-y divide-emerald-100">
 
                             @forelse ($donations as $donation)
 
-                                <tr class="hover:bg-slate-50/70 transition">
+                                <tr class="hover:bg-emerald-100/70 transition">
 
 
                                     {{-- Donation --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         <div class="flex items-center gap-3">
 
-                                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                            <div
+                                                class="w-10 h-10 rounded-xl
+                                                       bg-emerald-100
+                                                       text-emerald-800
+                                                       border border-emerald-200
+                                                       flex items-center justify-center"
+                                            >
 
                                                 <svg
                                                     class="w-5 h-5"
@@ -338,14 +497,23 @@
                                     </td>
 
 
+
                                     {{-- Donor --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         @if ($donation->donor)
 
                                             <div class="flex items-center gap-2">
 
-                                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold">
+                                                <div
+                                                    class="w-8 h-8 rounded-lg
+                                                           bg-emerald-100
+                                                           text-emerald-800
+                                                           border border-emerald-200
+                                                           flex items-center justify-center
+                                                           text-xs font-bold"
+                                                >
 
                                                     {{ strtoupper(substr($donation->donor->name, 0, 1)) }}
 
@@ -368,12 +536,22 @@
                                     </td>
 
 
+
                                     {{-- Category --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         @if ($donation->category)
 
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 text-xs font-semibold">
+                                            <span
+                                                class="inline-flex items-center
+                                                       px-2.5 py-1
+                                                       rounded-lg
+                                                       bg-purple-100
+                                                       text-purple-800
+                                                       border border-purple-200
+                                                       text-xs font-semibold"
+                                            >
 
                                                 {{ $donation->category->name }}
 
@@ -390,7 +568,9 @@
                                     </td>
 
 
+
                                     {{-- Quantity --}}
+
                                     <td class="px-6 py-4 text-center whitespace-nowrap">
 
                                         <span class="text-sm font-bold text-gray-900">
@@ -404,14 +584,24 @@
                                     </td>
 
 
+
                                     {{-- Status --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         @if ($donation->status === 'available')
 
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                       px-2.5 py-1
+                                                       rounded-full
+                                                       bg-emerald-100
+                                                       text-emerald-800
+                                                       border border-emerald-200
+                                                       text-xs font-semibold"
+                                            >
 
-                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
 
                                                 Available
 
@@ -419,9 +609,17 @@
 
                                         @elseif ($donation->status === 'claimed')
 
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold">
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                       px-2.5 py-1
+                                                       rounded-full
+                                                       bg-amber-100
+                                                       text-amber-800
+                                                       border border-amber-200
+                                                       text-xs font-semibold"
+                                            >
 
-                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
 
                                                 Claimed
 
@@ -429,9 +627,17 @@
 
                                         @elseif ($donation->status === 'completed')
 
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                       px-2.5 py-1
+                                                       rounded-full
+                                                       bg-blue-100
+                                                       text-blue-800
+                                                       border border-blue-200
+                                                       text-xs font-semibold"
+                                            >
 
-                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
 
                                                 Completed
 
@@ -439,7 +645,17 @@
 
                                         @else
 
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold">
+                                            <span
+                                                class="inline-flex items-center gap-1.5
+                                                       px-2.5 py-1
+                                                       rounded-full
+                                                       bg-red-100
+                                                       text-red-800
+                                                       border border-red-200
+                                                       text-xs font-semibold"
+                                            >
+
+                                                <span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>
 
                                                 {{ ucfirst(str_replace('_', ' ', $donation->status)) }}
 
@@ -450,7 +666,9 @@
                                     </td>
 
 
+
                                     {{-- Expiry --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         @php
@@ -460,13 +678,24 @@
 
                                         <div>
 
-                                            <p class="text-sm font-medium {{ $isExpired ? 'text-red-600' : 'text-gray-800' }}">
+                                            <p
+                                                class="text-sm font-medium
+                                                    {{ $isExpired
+                                                        ? 'text-red-700'
+                                                        : 'text-gray-800' }}"
+                                            >
 
                                                 {{ $expiry->format('d M Y') }}
 
                                             </p>
 
-                                            <p class="text-xs {{ $isExpired ? 'text-red-400' : 'text-gray-400' }}">
+
+                                            <p
+                                                class="text-xs
+                                                    {{ $isExpired
+                                                        ? 'text-red-500'
+                                                        : 'text-gray-400' }}"
+                                            >
 
                                                 {{ $expiry->format('g:i A') }}
 
@@ -481,16 +710,27 @@
                                     </td>
 
 
+
                                     {{-- Actions --}}
+
                                     <td class="px-6 py-4 whitespace-nowrap">
 
                                         <div class="flex items-center justify-end gap-2">
 
 
                                             {{-- View --}}
+
                                             <a
                                                 href="{{ route('admin.donations.show', $donation) }}"
-                                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold transition"
+                                                class="inline-flex items-center gap-1.5
+                                                       px-3 py-2
+                                                       rounded-lg
+                                                       bg-emerald-100
+                                                       text-emerald-800
+                                                       border border-emerald-200
+                                                       hover:bg-emerald-200
+                                                       text-xs font-semibold
+                                                       transition"
                                             >
 
                                                 <svg
@@ -521,12 +761,22 @@
                                             </a>
 
 
+
                                             {{-- Edit --}}
+
                                             @if ($donation->status === 'available')
 
                                                 <a
                                                     href="{{ route('admin.donations.edit', $donation) }}"
-                                                    class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-semibold transition"
+                                                    class="inline-flex items-center gap-1.5
+                                                           px-3 py-2
+                                                           rounded-lg
+                                                           bg-emerald-100
+                                                           text-emerald-800
+                                                           border border-emerald-200
+                                                           hover:bg-emerald-200
+                                                           text-xs font-semibold
+                                                           transition"
                                                 >
 
                                                     <svg
@@ -552,7 +802,9 @@
                                             @endif
 
 
+
                                             {{-- Delete --}}
+
                                             @if ($donation->status === 'available')
 
                                                 <form
@@ -568,7 +820,15 @@
 
                                                     <button
                                                         type="submit"
-                                                        class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 text-xs font-semibold transition"
+                                                        class="inline-flex items-center gap-1.5
+                                                               px-3 py-2
+                                                               rounded-lg
+                                                               bg-red-50
+                                                               text-red-700
+                                                               border border-red-100
+                                                               hover:bg-red-100
+                                                               text-xs font-semibold
+                                                               transition"
                                                     >
 
                                                         <svg
@@ -605,13 +865,20 @@
                             @empty
 
                                 {{-- Empty State --}}
+
                                 <tr>
 
                                     <td colspan="7" class="px-6 py-20">
 
                                         <div class="flex flex-col items-center text-center">
 
-                                            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center">
+                                            <div
+                                                class="w-16 h-16 rounded-2xl
+                                                       bg-emerald-100
+                                                       text-emerald-700
+                                                       border border-emerald-200
+                                                       flex items-center justify-center"
+                                            >
 
                                                 <svg
                                                     class="w-8 h-8"
@@ -646,7 +913,7 @@
 
                                                 <a
                                                     href="{{ route('admin.donations') }}"
-                                                    class="mt-4 text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+                                                    class="mt-4 text-sm font-semibold text-emerald-700 hover:text-emerald-900"
                                                 >
                                                     Clear filter
                                                 </a>
@@ -668,13 +935,18 @@
                 </div>
 
 
+
                 {{-- ================================================= --}}
                 {{-- PAGINATION --}}
                 {{-- ================================================= --}}
 
                 @if ($donations->hasPages())
 
-                    <div class="px-6 py-4 border-t border-gray-100">
+                    <div
+                        class="px-6 py-4
+                               border-t border-emerald-200
+                               bg-emerald-100/50"
+                    >
 
                         {{ $donations->withQueryString()->links() }}
 
