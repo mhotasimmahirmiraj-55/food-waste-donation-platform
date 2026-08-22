@@ -11,9 +11,8 @@ class Rating extends Model
         'giver_id',
         'receiver_id',
         'rating',
-        'comment',
+        'review',
     ];
-
 
     // Delivery relationship
     public function delivery()
@@ -21,13 +20,11 @@ class Rating extends Model
         return $this->belongsTo(Delivery::class);
     }
 
-
     // Person who gives rating
     public function giver()
     {
         return $this->belongsTo(User::class, 'giver_id');
     }
-
 
     // Person who receives rating
     public function receiver()

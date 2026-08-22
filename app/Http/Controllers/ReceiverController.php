@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Claim;
 use App\Models\FoodDonation;
+use App\Models\Report;
+use App\Models\Rating;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -179,6 +181,82 @@ class ReceiverController extends Controller
         ]);
 
         return view('receiver.claims.show', compact('claim'));
+    }
+
+    public function rateDonor(Request $request, Claim $claim): RedirectResponse
+    {
+        abort_unless($claim->receiver_id === auth()->id(), 403);
+
+        if ($claim->status !== 'completed') {
+            return back()->with(
+                'error',
+                'You can only rate a donor after the donation has been completed.'
+            );
+        }
+
+        $claim->load('foodDonation.donor', 'delivery');
+
+        if (!$claim->delivery) {
+            return back()->with(
+                'error',
+                'A delivery record could not be found for this claim.'
+            );
+        }
+
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'nullable|string|max:1000',
+        ]);
+
+        $existingRating = Rating::where('delivery_id', $claim->delivery->id)
+            ->where('giver_id', auth()->id())
+            ->exists();
+
+        if ($existingRating) {
+            return back()->with(
+                'error',
+                'You have already rated this donation.'
+            );
+        }
+
+        Rating::create([
+            'delivery_id' => $claim->delivery->id,
+            'giver_id' => auth()->id(),
+            'receiver_id' => $claim->foodDonation->donor->id,
+            'rating' => $request->rating,
+            'review' => $request->review,
+        ]);
+
+        return back()->with(
+            'success',
+            'Thank you! Your rating has been submitted successfully.'
+        );
+    }
+
+    public function reportIssue(Request $request, Claim $claim): RedirectResponse
+    {
+        abort_unless($claim->receiver_id === auth()->id(), 403);
+
+        $request->validate([
+            'reason' => 'required|string|min:10|max:1000',
+        ]);
+
+        $claim->load('foodDonation.donor');
+
+        if (!$claim->foodDonation || !$claim->foodDonation->donor) {
+            return back()->with('error', 'The donor information could not be found.');
+        }
+
+        Report::create([
+            'reporter_id' => auth()->id(),
+            'reported_user_id' => $claim->foodDonation->donor->id,
+            'reason' => $request->reason,
+            'status' => 'pending',
+        ]);
+
+        return redirect()
+            ->route('receiver.claims.show', $claim)
+            ->with('success', 'Your issue has been reported successfully. An administrator will review it.');
     }
 
     public function cancelClaim(Claim $claim): RedirectResponse
