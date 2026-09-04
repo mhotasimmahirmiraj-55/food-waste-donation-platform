@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Claim;
+use App\Models\Delivery;
 use Illuminate\Http\Request;
 
 class AdminClaimController extends Controller
@@ -29,7 +30,6 @@ class AdminClaimController extends Controller
         ]);
     }
 
-
     public function show(Claim $claim)
     {
         $claim->load([
@@ -41,7 +41,6 @@ class AdminClaimController extends Controller
             'claim' => $claim,
         ]);
     }
-
 
     public function edit(Claim $claim)
     {
@@ -55,16 +54,31 @@ class AdminClaimController extends Controller
         ]);
     }
 
-
     public function update(Request $request, Claim $claim)
     {
         $request->validate([
             'status' => 'required|in:pending,approved,rejected,completed,cancelled',
         ]);
 
+        $newStatus = $request->status;
+
         $claim->update([
-            'status' => $request->status,
+            'status' => $newStatus,
         ]);
+
+        // Create a delivery when an approved claim is ready
+        // for volunteer assignment.
+        if ($newStatus === 'approved') {
+            Delivery::firstOrCreate(
+                [
+                    'claim_id' => $claim->id,
+                ],
+                [
+                    'status' => 'pending',
+                    'volunteer_id' => null,
+                ]
+            );
+        }
 
         return redirect()
             ->route('admin.claims')
