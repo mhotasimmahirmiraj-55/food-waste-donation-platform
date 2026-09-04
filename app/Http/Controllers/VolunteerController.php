@@ -108,6 +108,7 @@ class VolunteerController extends Controller
         ]);
 
         $isOwner = $delivery->volunteer_id === auth()->id();
+
         $isAvailable = is_null($delivery->volunteer_id)
             && $delivery->status === 'pending';
 
@@ -143,8 +144,11 @@ class VolunteerController extends Controller
         ]);
 
         $delivery->load('claim.foodDonation');
+
         if ($delivery->claim) {
-            $foodTitle = $delivery->claim->foodDonation->title ?? 'your claimed food';
+            $foodTitle = $delivery->claim->foodDonation->title
+                ?? 'your claimed food';
+
             NotificationHelper::send(
                 $delivery->claim->receiver_id,
                 'Volunteer Assigned',
@@ -177,7 +181,8 @@ class VolunteerController extends Controller
             );
         }
 
-        // Delivery stays pending and unassigned — another volunteer can pick it up
+        // Delivery stays pending and unassigned
+        // Another volunteer can pick it up
         return redirect()
             ->route('volunteer.deliveries.index')
             ->with(
@@ -194,6 +199,7 @@ class VolunteerController extends Controller
         Request $request,
         Delivery $delivery
     ): RedirectResponse {
+        // Only assigned volunteer can update the delivery
         abort_unless(
             $delivery->volunteer_id === auth()->id(),
             403
@@ -208,6 +214,11 @@ class VolunteerController extends Controller
 
         $newStatus = $request->status;
 
+
+        // =========================================================
+        // ACCEPTED → PICKED UP
+        // =========================================================
+
         if (
             $newStatus === 'picked_up'
             && $delivery->status !== 'accepted'
@@ -218,6 +229,11 @@ class VolunteerController extends Controller
             );
         }
 
+
+        // =========================================================
+        // PICKED UP → DELIVERED
+        // =========================================================
+
         if (
             $newStatus === 'delivered'
             && $delivery->status !== 'picked_up'
@@ -227,6 +243,11 @@ class VolunteerController extends Controller
                 'A delivery must be picked up before it can be marked as delivered.'
             );
         }
+
+
+        // =========================================================
+        // UPDATE DELIVERY STATUS
+        // =========================================================
 
         $updates = [
             'status' => $newStatus,
@@ -242,24 +263,87 @@ class VolunteerController extends Controller
 
         $delivery->update($updates);
 
+
+        // Load claim and food donation
         $delivery->load('claim.foodDonation');
+
+
         if ($delivery->claim) {
-            $foodTitle = $delivery->claim->foodDonation->title ?? 'your claimed food';
+
+            $foodDonation = $delivery->claim->foodDonation;
+
+            $foodTitle = $foodDonation->title
+                ?? 'your claimed food';
+
+
+            // =====================================================
+            // PICKED UP
+            // =====================================================
+            //
+            // Volunteer clicks "Picked Up"
+            //
+            // Delivery:
+            //     accepted → picked_up
+            //
+            // Food Donation:
+            //     available/previous → claimed
+            //
+            // Donor Dashboard:
+            //     Claimed +1
+            //
+            // =====================================================
 
             if ($newStatus === 'picked_up') {
+
+                if ($foodDonation) {
+                    $foodDonation->update([
+                        'status' => 'claimed',
+                    ]);
+                }
+
                 NotificationHelper::send(
                     $delivery->claim->receiver_id,
                     'Food Picked Up',
                     "Your food donation '{$foodTitle}' has been picked up by the volunteer and is on its way!"
                 );
-            } elseif ($newStatus === 'delivered') {
-                // Update claim status to completed
-                $delivery->claim->update(['status' => 'completed']);
+            }
 
-                // Update food donation status to delivered
-                if ($delivery->claim->foodDonation) {
-                    $delivery->claim->foodDonation->update(['status' => 'delivered']);
+
+            // =====================================================
+            // DELIVERED
+            // =====================================================
+            //
+            // Volunteer clicks "Delivered"
+            //
+            // Delivery:
+            //     picked_up → delivered
+            //
+            // Claim:
+            //     → completed
+            //
+            // Food Donation:
+            //     → completed
+            //
+            // Donor Dashboard:
+            //     Completed +1
+            //
+            // =====================================================
+
+            elseif ($newStatus === 'delivered') {
+
+                // Claim becomes completed
+                $delivery->claim->update([
+                    'status' => 'completed',
+                ]);
+
+
+                // Food Donation becomes completed
+                if ($foodDonation) {
+                    $foodDonation->update([
+                        'status' => 'delivered',
+                    ]);
                 }
+
 
                 NotificationHelper::send(
                     $delivery->claim->receiver_id,
@@ -268,6 +352,7 @@ class VolunteerController extends Controller
                 );
             }
         }
+
 
         return back()->with(
             'success',
@@ -310,6 +395,7 @@ class VolunteerController extends Controller
         ]);
 
         if ($delivery->deliveryProof) {
+
             if ($delivery->deliveryProof->proof_image) {
                 Storage::disk('public')->delete(
                     $delivery->deliveryProof->proof_image

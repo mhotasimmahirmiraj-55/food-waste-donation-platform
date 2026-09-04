@@ -228,7 +228,7 @@ class DashboardController extends Controller
         ->count();
 
     $completedDonations = FoodDonation::where('donor_id', $donorId)
-        ->where('status', 'completed')
+        ->where('status', 'delivered')
         ->count();
 
     $expiredDonations = FoodDonation::where('donor_id', $donorId)
@@ -242,7 +242,7 @@ class DashboardController extends Controller
 
     $monthlyDonations = FoodDonation::where('donor_id', $donorId)
         ->whereYear('created_at', now()->year)
-        ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, COUNT(*) as total")
+        ->selectRaw("MONTH(created_at) as month, COUNT(*) as total")
         ->groupBy('month')
         ->orderBy('month')
         ->get();
