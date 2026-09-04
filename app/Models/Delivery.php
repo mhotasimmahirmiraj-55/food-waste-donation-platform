@@ -15,6 +15,15 @@ class Delivery extends Model
         'delivered_at',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'accepted_at'  => 'datetime',
+            'picked_up_at' => 'datetime',
+            'delivered_at' => 'datetime',
+        ];
+    }
+
 
     // Claim relationship
     public function claim()

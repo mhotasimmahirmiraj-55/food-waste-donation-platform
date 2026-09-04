@@ -242,7 +242,7 @@ class DashboardController extends Controller
 
     $monthlyDonations = FoodDonation::where('donor_id', $donorId)
         ->whereYear('created_at', now()->year)
-        ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+        ->selectRaw("CAST(strftime('%m', created_at) AS INTEGER) as month, COUNT(*) as total")
         ->groupBy('month')
         ->orderBy('month')
         ->get();

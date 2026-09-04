@@ -804,7 +804,8 @@
                         </div>
 
 
-                        <div class="border-2
+                        <div id="imageDropzone"
+                             class="border-2
                                     border-dashed
                                     border-gray-200
                                     hover:border-emerald-400
@@ -841,84 +842,49 @@
                             </div>
 
 
-                            <h5 class="font-bold
-                                       text-gray-800">
-
-                                Add a Food Picture
-
+                            <h5 class="font-bold text-gray-800">
+                                Add Food Photos
                             </h5>
 
-
-                            <p class="text-sm
-                                      text-gray-500
-                                      mt-1
-                                      mb-5">
-
-                                A clear picture helps receivers understand the donation.
-
+                            <p class="text-sm text-gray-500 mt-1 mb-5">
+                                Select one or more clear pictures of the food items (JPG, PNG • Max 2MB each).
                             </p>
-
 
                             <button
                                 type="button"
                                 id="openModal"
-
-                                class="inline-flex
-                                       items-center
-                                       justify-center
-                                       gap-2
-                                       px-5 py-3
-                                       rounded-xl
-                                       bg-emerald-600
-                                       text-white
-                                       font-semibold
-                                       shadow-sm
-                                       hover:bg-emerald-700
-                                       hover:shadow-lg
-                                       transition-all
-                                       duration-200">
-
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     class="w-5 h-5"
-                                     fill="none"
-                                     viewBox="0 0 24 24"
-                                     stroke="currentColor"
-                                     stroke-width="2">
-
-                                    <path stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          d="M12 4v16m8-8H4"/>
-
+                                onclick="document.getElementById('food_images').click()"
+                                class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 text-white font-semibold shadow-sm hover:bg-emerald-700 hover:shadow-lg transition-all duration-200 cursor-pointer"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                                 </svg>
-
-                                Upload Picture
-
+                                Upload Photos
                             </button>
-
-
-                            <p id="selectedImageName"
-                               class="mt-4
-                                      text-sm
-                                      text-emerald-600
-                                      font-semibold">
-                            </p>
-
-
-                            <p class="text-xs
-                                      text-gray-400
-                                      mt-3">
-
-                                JPG, JPEG or PNG • Maximum 2MB
-
-                            </p>
-
 
                             <input
                                 type="file"
-                                id="food_image"
-                                name="food_image"
+                                id="food_images"
+                                name="food_images[]"
                                 accept="image/*"
-                                class="hidden">
+                                multiple
+                                class="hidden"
+                            >
+
+                            {{-- Multi-Image Live Preview Grid --}}
+                            <div id="imagePreviewContainer" class="hidden mt-6 pt-4 border-t border-gray-100 text-left">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span id="selectedImageInfo" class="text-xs font-semibold text-emerald-700"></span>
+                                    <button type="button" id="clearAllImagesBtn" class="text-xs text-rose-600 hover:text-rose-700 font-semibold cursor-pointer">
+                                        Clear all photos
+                                    </button>
+                                </div>
+                                <div id="previewGrid" class="flex flex-wrap gap-3 justify-center sm:justify-start"></div>
+                            </div>
+
+                            <p class="text-xs text-gray-400 mt-3">
+                                JPG, JPEG or PNG • Maximum 2MB per photo
+                            </p>
 
                         </div>
 
@@ -1030,20 +996,13 @@
 
 
     {{-- =========================================================
-         IMAGE UPLOAD SCRIPT
+         DONATION SCRIPTS: MULTIPLE ITEMS & PICTURE UPLOAD
     ========================================================== --}}
 
     <script>
-
-        const openModal = document.getElementById('openModal');
-
-        const foodImage = document.getElementById('food_image');
-
-        const selectedImageName =
-            document.getElementById('selectedImageName');
         // ==========================================
-// MULTIPLE FOOD ITEMS
-// ==========================================
+        // MULTIPLE FOOD ITEMS
+        // ==========================================
 
 const addFoodItemButton =
     document.getElementById('add-food-item');
@@ -1208,24 +1167,123 @@ addFoodItemButton.addEventListener('click', function () {
 });
 
 
-        openModal.addEventListener('click', function () {
+        // ==========================================
+        // MULTI-PICTURE UPLOAD & LIVE PREVIEW SCRIPT
+        // ==========================================
+        const uploadBtn = document.getElementById('openModal');
+        const fileInput = document.getElementById('food_images');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const previewGrid = document.getElementById('previewGrid');
+        const infoText = document.getElementById('selectedImageInfo');
+        const clearBtn = document.getElementById('clearAllImagesBtn');
+        const dropzone = document.getElementById('imageDropzone');
 
-            foodImage.click();
+        let dt = new DataTransfer();
 
-        });
+        if (uploadBtn && fileInput) {
+            uploadBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                fileInput.click();
+            });
+        }
 
+        if (dropzone && fileInput) {
+            dropzone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                dropzone.classList.add('border-emerald-500', 'bg-emerald-50/50');
+            });
+            dropzone.addEventListener('dragleave', function (e) {
+                e.preventDefault();
+                dropzone.classList.remove('border-emerald-500', 'bg-emerald-50/50');
+            });
+            dropzone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                dropzone.classList.remove('border-emerald-500', 'bg-emerald-50/50');
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    addFiles(e.dataTransfer.files);
+                }
+            });
+        }
 
-        foodImage.addEventListener('change', function () {
+        if (fileInput) {
+            fileInput.addEventListener('change', function () {
+                if (this.files && this.files.length > 0) {
+                    addFiles(this.files);
+                }
+            });
+        }
 
-            if (foodImage.files.length > 0) {
+        function addFiles(fileList) {
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+                if (file.size > 2 * 1024 * 1024) {
+                    alert(`File "${file.name}" exceeds 2MB limit and was skipped.`);
+                    continue;
+                }
+                dt.items.add(file);
+            }
+            if (fileInput) fileInput.files = dt.files;
+            renderPreviews();
+        }
 
-                selectedImageName.innerHTML =
-                    "✓ Selected: " + foodImage.files[0].name;
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                dt = new DataTransfer();
+                if (fileInput) fileInput.files = dt.files;
+                renderPreviews();
+            });
+        }
 
+        function renderPreviews() {
+            if (!previewGrid || !previewContainer) return;
+            previewGrid.innerHTML = '';
+
+            if (dt.files.length === 0) {
+                previewContainer.classList.add('hidden');
+                if (infoText) infoText.textContent = '';
+                return;
             }
 
-        });
+            previewContainer.classList.remove('hidden');
+            if (infoText) {
+                infoText.textContent = `✓ ${dt.files.length} photo${dt.files.length > 1 ? 's' : ''} selected`;
+            }
 
+            Array.from(dt.files).forEach((file, index) => {
+                const card = document.createElement('div');
+                card.className = 'relative group w-16 h-16 rounded-xl overflow-hidden shadow-sm border border-emerald-300 bg-gray-50 shrink-0';
+
+                const img = document.createElement('img');
+                img.className = 'w-full h-full object-cover';
+                img.src = URL.createObjectURL(file);
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'absolute top-1 right-1 w-4 h-4 bg-black/70 hover:bg-rose-600 text-white rounded-full flex items-center justify-center text-[9px] font-bold transition cursor-pointer';
+                removeBtn.innerHTML = '✕';
+                removeBtn.title = 'Remove';
+                removeBtn.onclick = function (e) {
+                    e.stopPropagation();
+                    removeFile(index);
+                };
+
+                card.appendChild(img);
+                card.appendChild(removeBtn);
+                previewGrid.appendChild(card);
+            });
+        }
+
+        function removeFile(index) {
+            const newDt = new DataTransfer();
+            for (let i = 0; i < dt.files.length; i++) {
+                if (i !== index) {
+                    newDt.items.add(dt.files[i]);
+                }
+            }
+            dt = newDt;
+            if (fileInput) fileInput.files = dt.files;
+            renderPreviews();
+        }
     </script>
 
 

@@ -31,6 +31,9 @@ return new class extends Migration
         $table->text('review')->nullable();
 
         $table->timestamps();
+
+        // One receiver can rate a particular delivery only once
+        $table->unique(['delivery_id', 'giver_id']);
     });
 }
 

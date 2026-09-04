@@ -498,7 +498,21 @@
 
                                 <button type="submit"
                                         class="w-full rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700">
-                                    Accept Delivery
+                                    ✓ Accept Delivery
+                                </button>
+
+                            </form>
+
+                            <form method="POST"
+                                  action="{{ route('volunteer.deliveries.reject', $delivery) }}"
+                                  class="mt-3"
+                                  onsubmit="return confirm('Are you sure you want to decline this delivery? It will remain available for other volunteers.');">
+
+                                @csrf
+
+                                <button type="submit"
+                                        class="w-full rounded-xl border border-red-200 bg-red-50 px-5 py-3 text-sm font-bold text-red-700 shadow-sm transition hover:bg-red-100">
+                                    ✕ Decline Delivery
                                 </button>
 
                             </form>

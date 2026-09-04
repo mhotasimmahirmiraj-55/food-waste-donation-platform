@@ -10,6 +10,7 @@ class Claim extends Model
         'food_donation_id',
         'receiver_id',
         'status',
+        'cancellation_reason',
     ];
 
 

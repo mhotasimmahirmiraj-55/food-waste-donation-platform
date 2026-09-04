@@ -13,6 +13,7 @@ use App\Http\Controllers\ReceiverController;
 use App\Http\Controllers\ReceiverRatingController;
 use App\Http\Controllers\VolunteerController;
 use App\Http\Controllers\ReceiverBookmarkController;
+use App\Http\Controllers\ReceiverNotificationController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
@@ -153,6 +154,68 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->middleware('role:receiver')
     ->name('receiver.claims.cancel');
 
+    Route::post('/receiver/claims/{claim}/report',
+        [ReceiverController::class, 'reportIssue']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.claims.report');
+
+    Route::get('/receiver/history',
+        [ReceiverController::class, 'history']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.history');
+
+    Route::get('/receiver/impact',
+        [ReceiverController::class, 'impact']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.impact');
+
+    Route::get('/receiver/game-and-milestone',
+        [ReceiverController::class, 'milestones']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.milestones');
+
+    // Notifications
+    Route::get('/receiver/notifications',
+        [ReceiverNotificationController::class, 'index']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.notifications');
+
+    Route::patch('/receiver/notifications/{notification}/read',
+        [ReceiverNotificationController::class, 'markAsRead']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.notifications.read');
+
+    Route::post('/receiver/notifications/read-all',
+        [ReceiverNotificationController::class, 'markAllAsRead']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.notifications.read-all');
+
+    Route::delete('/receiver/notifications/{notification}',
+        [ReceiverNotificationController::class, 'destroy']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.notifications.destroy');
+
+    // Help Center
+    Route::get('/receiver/help',
+        [ReceiverController::class, 'help']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.help');
+
+    Route::post('/receiver/help/technical-report',
+        [ReceiverController::class, 'reportTechnicalProblem']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.help.technical-report');
+
 
     Route::get('/volunteer/dashboard', 
         [DashboardController::class, 'volunteer']
@@ -181,6 +244,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     )
     ->middleware('role:volunteer')
     ->name('volunteer.deliveries.accept');
+
+    Route::post('/volunteer/deliveries/{delivery}/reject',
+        [VolunteerController::class, 'reject']
+    )
+    ->middleware('role:volunteer')
+    ->name('volunteer.deliveries.reject');
 
     Route::patch('/volunteer/deliveries/{delivery}/status',
         [VolunteerController::class, 'updateStatus']

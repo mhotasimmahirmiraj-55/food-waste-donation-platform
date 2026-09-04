@@ -134,6 +134,7 @@
                 method="POST"
                 action="{{ route('donations.update', $donation->id) }}"
                 id="editDonationForm"
+                enctype="multipart/form-data"
             >
 
                 @csrf
@@ -573,6 +574,133 @@
 
 
                     {{-- =================================================
+                         FOOD PICTURES CARD
+                    ================================================== --}}
+
+                    <section class="overflow-hidden rounded-3xl border border-slate-700/80 bg-slate-800/95 shadow-2xl shadow-black/30 backdrop-blur">
+
+                        {{-- SECTION HEADER --}}
+                        <div class="border-b border-slate-700 bg-gradient-to-r from-slate-800 to-purple-950/30 px-6 py-5 sm:px-7">
+                            <div class="flex items-center gap-4">
+                                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-900/40 text-xl ring-1 ring-purple-500/20">
+                                    📸
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white">
+                                        Food Pictures
+                                    </h3>
+                                    <p class="text-sm text-slate-400">
+                                        Manage existing photos and upload additional photos for this donation
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 sm:p-7 space-y-6">
+
+                            {{-- Existing Pictures (Keep or Delete) --}}
+                            @if (!empty($donation->images))
+                                <div class="p-4 sm:p-5 rounded-2xl bg-slate-700/50 border border-slate-600/80 space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                                            Existing Photos ({{ count($donation->images) }})
+                                        </h4>
+                                        <span class="text-[11px] text-slate-400">Select Keep or Delete</span>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                        @foreach ($donation->images as $idx => $img)
+                                            @php
+                                                $imgUrl = str_starts_with($img, 'http') ? $img : (str_starts_with($img, 'storage/') ? asset($img) : asset('storage/' . $img));
+                                            @endphp
+                                            <div class="p-2.5 rounded-xl bg-slate-800/90 border border-slate-600 flex items-center gap-3">
+                                                <img src="{{ $imgUrl }}"
+                                                     alt="Donation Photo #{{ $idx + 1 }}"
+                                                     class="w-16 h-16 rounded-lg object-cover border border-slate-500 shrink-0">
+                                                <div class="flex-1 min-w-0">
+                                                    <span class="text-xs font-semibold text-slate-300 block truncate">Photo #{{ $idx + 1 }}</span>
+                                                    <div class="mt-2 flex items-center gap-3 text-xs font-semibold">
+                                                        <label class="inline-flex items-center gap-1.5 cursor-pointer text-emerald-400 hover:text-emerald-300">
+                                                            <input type="radio"
+                                                                   name="image_actions[{{ $idx }}]"
+                                                                   value="keep"
+                                                                   checked
+                                                                   class="text-emerald-500 bg-slate-900 border-slate-600 focus:ring-0">
+                                                            Keep
+                                                        </label>
+                                                        <label class="inline-flex items-center gap-1.5 cursor-pointer text-rose-400 hover:text-rose-300">
+                                                            <input type="radio"
+                                                                   name="image_actions[{{ $idx }}]"
+                                                                   value="delete"
+                                                                   class="text-rose-500 bg-slate-900 border-slate-600 focus:ring-0">
+                                                            Delete
+                                                        </label>
+                                                    </div>
+                                                    <input type="hidden" name="existing_images[{{ $idx }}]" value="{{ $img }}">
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Upload More / Add Photos Area --}}
+                            <div id="imageDropzone"
+                                 class="border-2 border-dashed border-slate-600 hover:border-emerald-500 rounded-2xl p-6 text-center bg-slate-700/40 hover:bg-slate-700/60 transition-all duration-200">
+
+                                <div class="w-12 h-12 mx-auto flex items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20 mb-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+
+                                <h5 class="text-sm font-bold text-slate-200">
+                                    {{ !empty($donation->images) ? 'Add More Photos' : 'Upload Food Photos' }}
+                                </h5>
+
+                                <p class="text-xs text-slate-400 mt-0.5 mb-4">
+                                    You can select 1 or more photos (JPG, PNG • Max 2MB each)
+                                </p>
+
+                                <button
+                                    type="button"
+                                    onclick="document.getElementById('food_images').click()"
+                                    class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    Choose Photos
+                                </button>
+
+                                <input
+                                    type="file"
+                                    id="food_images"
+                                    name="food_images[]"
+                                    accept="image/*"
+                                    multiple
+                                    class="hidden"
+                                >
+
+                                {{-- Compact Live Previews for newly selected photos --}}
+                                <div id="imagePreviewContainer" class="hidden mt-5 pt-4 border-t border-slate-700/60 text-left">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span id="selectedImageInfo" class="text-xs font-semibold text-emerald-400"></span>
+                                        <button type="button" id="clearNewImagesBtn" class="text-xs text-rose-400 hover:text-rose-300 font-medium cursor-pointer">
+                                            Clear new photos
+                                        </button>
+                                    </div>
+                                    <div id="newImagesPreviewGrid" class="flex flex-wrap gap-3 justify-center sm:justify-start"></div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    {{-- =================================================
                          ACTION BAR
                     ================================================== --}}
 
@@ -887,6 +1015,92 @@
                 }
 
             });
+
+
+            // =====================================================
+            // MULTI-IMAGE PREVIEW HANDLER
+            // =====================================================
+
+            const fileInput = document.getElementById('food_images');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const previewGrid = document.getElementById('newImagesPreviewGrid');
+            const infoText = document.getElementById('selectedImageInfo');
+            const clearBtn = document.getElementById('clearNewImagesBtn');
+
+            let dt = new DataTransfer();
+
+            if (fileInput) {
+                fileInput.addEventListener('change', function () {
+                    for (let i = 0; i < this.files.length; i++) {
+                        const file = this.files[i];
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert(`File "${file.name}" exceeds 2MB limit and was skipped.`);
+                            continue;
+                        }
+                        dt.items.add(file);
+                    }
+                    fileInput.files = dt.files;
+                    renderNewPreviews();
+                });
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    dt = new DataTransfer();
+                    if (fileInput) fileInput.files = dt.files;
+                    renderNewPreviews();
+                });
+            }
+
+            function renderNewPreviews() {
+                if (!previewGrid || !previewContainer) return;
+                previewGrid.innerHTML = '';
+
+                if (dt.files.length === 0) {
+                    previewContainer.classList.add('hidden');
+                    return;
+                }
+
+                previewContainer.classList.remove('hidden');
+                if (infoText) {
+                    infoText.textContent = `${dt.files.length} new photo${dt.files.length > 1 ? 's' : ''} selected (unsaved)`;
+                }
+
+                Array.from(dt.files).forEach((file, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'relative group w-16 h-16 rounded-xl overflow-hidden shadow-xs border border-emerald-400 bg-slate-900 shrink-0';
+
+                    const img = document.createElement('img');
+                    img.className = 'w-full h-full object-cover';
+                    img.src = URL.createObjectURL(file);
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'absolute top-1 right-1 w-4 h-4 bg-black/70 hover:bg-rose-600 text-white rounded-full flex items-center justify-center text-[9px] font-bold transition cursor-pointer';
+                    removeBtn.innerHTML = '✕';
+                    removeBtn.title = 'Remove';
+                    removeBtn.onclick = function (e) {
+                        e.stopPropagation();
+                        removeNewFile(index);
+                    };
+
+                    card.appendChild(img);
+                    card.appendChild(removeBtn);
+                    previewGrid.appendChild(card);
+                });
+            }
+
+            function removeNewFile(index) {
+                const newDt = new DataTransfer();
+                for (let i = 0; i < dt.files.length; i++) {
+                    if (i !== index) {
+                        newDt.items.add(dt.files[i]);
+                    }
+                }
+                dt = newDt;
+                if (fileInput) fileInput.files = dt.files;
+                renderNewPreviews();
+            }
 
         });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\NotificationHelper;
 use App\Models\Delivery;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -137,15 +138,51 @@ class VolunteerController extends Controller
 
         $delivery->update([
             'volunteer_id' => auth()->id(),
-            'status' => 'accepted',
-            'accepted_at' => now(),
+            'status'       => 'accepted',
+            'accepted_at'  => now(),
         ]);
+
+        $delivery->load('claim.foodDonation');
+        if ($delivery->claim) {
+            $foodTitle = $delivery->claim->foodDonation->title ?? 'your claimed food';
+            NotificationHelper::send(
+                $delivery->claim->receiver_id,
+                'Volunteer Assigned',
+                "A volunteer has accepted the delivery for '{$foodTitle}'. Delivery is on the way soon!"
+            );
+        }
 
         return redirect()
             ->route('volunteer.deliveries.show', $delivery)
             ->with(
                 'success',
                 'Delivery accepted successfully. You can now manage this delivery.'
+            );
+    }
+
+
+    /**
+     * Reject an available delivery — puts it back in the pool for other volunteers.
+     */
+    public function reject(Delivery $delivery): RedirectResponse
+    {
+        // Only unassigned pending deliveries can be rejected
+        if (
+            !is_null($delivery->volunteer_id)
+            || $delivery->status !== 'pending'
+        ) {
+            return back()->with(
+                'error',
+                'This delivery is no longer available to reject.'
+            );
+        }
+
+        // Delivery stays pending and unassigned — another volunteer can pick it up
+        return redirect()
+            ->route('volunteer.deliveries.index')
+            ->with(
+                'success',
+                'You have declined this delivery. It is now available for other volunteers.'
             );
     }
 
@@ -204,6 +241,33 @@ class VolunteerController extends Controller
         }
 
         $delivery->update($updates);
+
+        $delivery->load('claim.foodDonation');
+        if ($delivery->claim) {
+            $foodTitle = $delivery->claim->foodDonation->title ?? 'your claimed food';
+
+            if ($newStatus === 'picked_up') {
+                NotificationHelper::send(
+                    $delivery->claim->receiver_id,
+                    'Food Picked Up',
+                    "Your food donation '{$foodTitle}' has been picked up by the volunteer and is on its way!"
+                );
+            } elseif ($newStatus === 'delivered') {
+                // Update claim status to completed
+                $delivery->claim->update(['status' => 'completed']);
+
+                // Update food donation status to delivered
+                if ($delivery->claim->foodDonation) {
+                    $delivery->claim->foodDonation->update(['status' => 'delivered']);
+                }
+
+                NotificationHelper::send(
+                    $delivery->claim->receiver_id,
+                    'Delivery Completed',
+                    "Your food donation '{$foodTitle}' has been safely delivered! Please rate the donor and volunteer."
+                );
+            }
+        }
 
         return back()->with(
             'success',

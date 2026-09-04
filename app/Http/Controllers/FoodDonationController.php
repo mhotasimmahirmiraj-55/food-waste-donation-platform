@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\FoodDonation;
 use App\Models\FoodCategory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class FoodDonationController extends Controller
 {
@@ -101,10 +102,15 @@ public function update(Request $request, $id)
     // ==========================================
 
     $request->validate([
-        'title'          => 'required|string|max:255',
-        'description'    => 'nullable|string',
-        'expiry_time'    => 'required|date',
-        'pickup_address' => 'required|string|max:255',
+        'title'            => 'required|string|max:255',
+        'description'      => 'nullable|string',
+        'expiry_time'      => 'required|date',
+        'pickup_address'   => 'required|string|max:255',
+        'food_image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'food_images'      => 'nullable|array',
+        'food_images.*'    => 'image|mimes:jpg,jpeg,png|max:2048',
+        'existing_images'  => 'nullable|array',
+        'image_actions'    => 'nullable|array',
 
         // Multiple Food Items
         'items'                    => 'required|array|min:1',
@@ -132,6 +138,38 @@ public function update(Request $request, $id)
 
     DB::transaction(function () use ($request, $donation) {
 
+        // Existing images handling: Keep or Delete
+        $keptImages = [];
+        if ($request->has('existing_images') && is_array($request->existing_images)) {
+            foreach ($request->existing_images as $idx => $path) {
+                $action = $request->image_actions[$idx] ?? 'keep';
+                if ($action === 'delete') {
+                    if (Storage::disk('public')->exists($path)) {
+                        Storage::disk('public')->delete($path);
+                    }
+                } else {
+                    $keptImages[] = $path;
+                }
+            }
+        } elseif (!$request->boolean('remove_image')) {
+            $keptImages = $donation->images;
+        }
+
+        // Handle newly uploaded images (multiple and/or single)
+        if ($request->hasFile('food_images')) {
+            foreach ($request->file('food_images') as $file) {
+                $keptImages[] = $file->store('food_images', 'public');
+            }
+        }
+        if ($request->hasFile('food_image')) {
+            $keptImages[] = $request->file('food_image')->store('food_images', 'public');
+        }
+
+        $newFoodImage = null;
+        if (!empty($keptImages)) {
+            $newFoodImage = count($keptImages) === 1 ? $keptImages[0] : json_encode(array_values($keptImages));
+        }
+
         // ======================================
         // UPDATE MAIN DONATION
         // ======================================
@@ -141,6 +179,7 @@ public function update(Request $request, $id)
             'description'    => $request->description,
             'expiry_time'    => $request->expiry_time,
             'pickup_address' => $request->pickup_address,
+            'food_image'     => $newFoodImage,
         ]);
 
 
@@ -253,6 +292,8 @@ public function update(Request $request, $id)
             'expiry_time'    => 'required',
             'pickup_address' => 'required',
             'food_image'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'food_images'    => 'nullable|array',
+            'food_images.*'  => 'image|mimes:jpg,jpeg,png|max:2048',
 
             // Multiple Food Items Validation Rules
             'items'                 => 'required|array|min:1',
@@ -262,10 +303,20 @@ public function update(Request $request, $id)
             'items.*.unit'          => 'required|string|max:50',
         ]);
 
-        // Single food image handling
-        $imagePath = null;
+        // Multi & single food image handling
+        $imagePaths = [];
+        if ($request->hasFile('food_images')) {
+            foreach ($request->file('food_images') as $file) {
+                $imagePaths[] = $file->store('food_images', 'public');
+            }
+        }
         if ($request->hasFile('food_image')) {
-            $imagePath = $request->file('food_image')->store('food_images', 'public');
+            $imagePaths[] = $request->file('food_image')->store('food_images', 'public');
+        }
+
+        $imagePath = null;
+        if (!empty($imagePaths)) {
+            $imagePath = count($imagePaths) === 1 ? $imagePaths[0] : json_encode(array_values($imagePaths));
         }
 
         // 2. Transaction purely handling safety for both operations
