@@ -141,6 +141,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->middleware('role:receiver')
     ->name('receiver.claims.rate');
 
+    Route::post('/receiver/claims/{claim}/rate-volunteer',
+        [ReceiverRatingController::class, 'storeVolunteerRating']
+    )
+    ->middleware('role:receiver')
+    ->name('receiver.claims.rate-volunteer');
+
     Route::patch('/receiver/claims/{claim}/cancel',
         [ReceiverController::class, 'cancelClaim']
     )
