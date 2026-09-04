@@ -42,4 +42,11 @@ class Delivery extends Model
     {
         return $this->hasOne(Rating::class);
     }
+
+
+    // Volunteer rating relationship
+    public function volunteerRating()
+    {
+        return $this->hasOne(VolunteerRating::class);
+    }
 }

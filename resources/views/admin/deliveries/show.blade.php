@@ -1,5 +1,9 @@
 <x-app-layout>
 
+    {{-- =========================================================
+         HEADER
+         ========================================================= --}}
+
     <x-slot name="header">
 
         <div class="flex items-center justify-between">
@@ -10,16 +14,27 @@
                     Delivery Details
                 </h2>
 
-                <p class="mt-1 text-sm text-gray-500">
+                <p class="mt-1 text-sm text-emerald-800">
                     View delivery information and track its progress.
                 </p>
 
             </div>
 
 
+            {{-- Desktop back button --}}
+
             <a
                 href="{{ route('admin.deliveries') }}"
-                class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition shadow-sm"
+                class="hidden sm:inline-flex items-center gap-2
+                       px-4 py-2
+                       rounded-xl
+                       bg-white
+                       border border-emerald-200
+                       text-sm font-semibold
+                       text-emerald-800
+                       hover:bg-emerald-50
+                       transition
+                       shadow-sm"
             >
 
                 <svg
@@ -47,25 +62,52 @@
     </x-slot>
 
 
-    <div class="min-h-screen bg-slate-50">
+
+    {{-- =========================================================
+         MAIN PAGE
+         ========================================================= --}}
+
+    <div class="min-h-screen bg-gradient-to-br from-emerald-100 via-white to-green-100">
 
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
 
-            {{-- ================================================= --}}
-            {{-- TOP DELIVERY SUMMARY --}}
-            {{-- ================================================= --}}
+            {{-- =================================================
+                 TOP DELIVERY SUMMARY
+                 ================================================= --}}
 
-            <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-orange-900 rounded-2xl shadow-xl overflow-hidden mb-8">
+            <div
+                class="bg-gradient-to-br
+                       from-emerald-950
+                       via-emerald-900
+                       to-green-900
+                       rounded-2xl
+                       shadow-xl
+                       overflow-hidden
+                       mb-8"
+            >
 
                 <div class="px-6 py-8 sm:px-8">
 
-                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                    <div
+                        class="flex flex-col lg:flex-row
+                               lg:items-center
+                               lg:justify-between
+                               gap-6"
+                    >
 
+
+                        {{-- Delivery Identity --}}
 
                         <div class="flex items-center gap-4">
 
-                            <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/10 text-orange-300 flex items-center justify-center">
+                            <div
+                                class="w-14 h-14 rounded-2xl
+                                       bg-white/10
+                                       border border-white/10
+                                       text-emerald-200
+                                       flex items-center justify-center"
+                            >
 
                                 <svg
                                     class="w-7 h-7"
@@ -88,7 +130,7 @@
 
                             <div>
 
-                                <p class="text-xs font-semibold uppercase tracking-wider text-orange-300">
+                                <p class="text-xs font-semibold uppercase tracking-wider text-emerald-300">
                                     Delivery
                                 </p>
 
@@ -96,7 +138,7 @@
                                     #{{ $delivery->id }}
                                 </h1>
 
-                                <p class="mt-1 text-sm text-slate-300">
+                                <p class="mt-1 text-sm text-emerald-200">
                                     Claim #{{ $delivery->claim_id }}
                                 </p>
 
@@ -105,12 +147,24 @@
                         </div>
 
 
-                        {{-- Status --}}
+
+                        {{-- =================================================
+                             STATUS
+                             ================================================= --}}
+
                         <div>
 
                             @if ($delivery->status === 'pending')
 
-                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/20 border border-blue-400/20 text-blue-200 text-sm font-semibold">
+                                <span
+                                    class="inline-flex items-center gap-2
+                                           px-4 py-2
+                                           rounded-full
+                                           bg-blue-500/20
+                                           border border-blue-400/20
+                                           text-blue-200
+                                           text-sm font-semibold"
+                                >
 
                                     <span class="w-2 h-2 rounded-full bg-blue-400"></span>
 
@@ -120,7 +174,15 @@
 
                             @elseif ($delivery->status === 'accepted')
 
-                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-400/20 text-amber-200 text-sm font-semibold">
+                                <span
+                                    class="inline-flex items-center gap-2
+                                           px-4 py-2
+                                           rounded-full
+                                           bg-amber-500/20
+                                           border border-amber-400/20
+                                           text-amber-200
+                                           text-sm font-semibold"
+                                >
 
                                     <span class="w-2 h-2 rounded-full bg-amber-400"></span>
 
@@ -130,7 +192,15 @@
 
                             @elseif ($delivery->status === 'picked_up')
 
-                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/20 border border-purple-400/20 text-purple-200 text-sm font-semibold">
+                                <span
+                                    class="inline-flex items-center gap-2
+                                           px-4 py-2
+                                           rounded-full
+                                           bg-purple-500/20
+                                           border border-purple-400/20
+                                           text-purple-200
+                                           text-sm font-semibold"
+                                >
 
                                     <span class="w-2 h-2 rounded-full bg-purple-400"></span>
 
@@ -140,7 +210,15 @@
 
                             @elseif ($delivery->status === 'delivered')
 
-                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/20 border border-emerald-400/20 text-emerald-200 text-sm font-semibold">
+                                <span
+                                    class="inline-flex items-center gap-2
+                                           px-4 py-2
+                                           rounded-full
+                                           bg-emerald-500/20
+                                           border border-emerald-400/20
+                                           text-emerald-200
+                                           text-sm font-semibold"
+                                >
 
                                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
 
@@ -150,7 +228,15 @@
 
                             @else
 
-                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-white text-sm font-semibold">
+                                <span
+                                    class="inline-flex items-center gap-2
+                                           px-4 py-2
+                                           rounded-full
+                                           bg-white/10
+                                           border border-white/10
+                                           text-white
+                                           text-sm font-semibold"
+                                >
 
                                     {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
 
@@ -167,16 +253,24 @@
             </div>
 
 
-            {{-- ================================================= --}}
-            {{-- FLASH MESSAGES --}}
-            {{-- ================================================= --}}
+
+            {{-- =========================================================
+                 FLASH MESSAGES
+                 ========================================================= --}}
 
             @if (session('success'))
 
-                <div class="mb-6 flex items-start gap-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3">
+                <div
+                    class="mb-6 flex items-start gap-3
+                           rounded-xl
+                           bg-emerald-100
+                           border border-emerald-200
+                           text-emerald-900
+                           px-4 py-3"
+                >
 
                     <svg
-                        class="w-5 h-5 mt-0.5 flex-shrink-0"
+                        class="w-5 h-5 mt-0.5 flex-shrink-0 text-emerald-700"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -202,7 +296,14 @@
 
             @if (session('error'))
 
-                <div class="mb-6 flex items-start gap-3 rounded-xl bg-red-50 border border-red-200 text-red-800 px-4 py-3">
+                <div
+                    class="mb-6 flex items-start gap-3
+                           rounded-xl
+                           bg-red-100
+                           border border-red-200
+                           text-red-900
+                           px-4 py-3"
+                >
 
                     <svg
                         class="w-5 h-5 mt-0.5 flex-shrink-0"
@@ -229,21 +330,36 @@
             @endif
 
 
-            {{-- ================================================= --}}
-            {{-- INFORMATION GRID --}}
-            {{-- ================================================= --}}
+
+            {{-- =========================================================
+                 INFORMATION GRID
+                 ========================================================= --}}
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
 
-                {{-- Donation Information --}}
-                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                {{-- =================================================
+                     DONATION
+                     ================================================= --}}
 
-                    <div class="px-6 py-5 border-b border-gray-100">
+                <div
+                    class="bg-white
+                           rounded-2xl
+                           border border-emerald-200
+                           shadow-sm
+                           overflow-hidden"
+                >
+
+                    <div class="px-6 py-5 border-b border-emerald-100">
 
                         <div class="flex items-center gap-3">
 
-                            <div class="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
+                            <div
+                                class="w-10 h-10 rounded-xl
+                                       bg-emerald-100
+                                       text-emerald-700
+                                       flex items-center justify-center"
+                            >
 
                                 <svg
                                     class="w-5 h-5"
@@ -283,11 +399,15 @@
                     <div class="p-6">
 
                         <p class="text-lg font-bold text-gray-900">
-                            {{ $delivery->claim->foodDonation->title ?? 'N/A' }}
+
+                            {{ $delivery->claim?->foodDonation?->title ?? 'N/A' }}
+
                         </p>
 
-                        <p class="mt-2 text-sm text-gray-500">
+                        <p class="mt-2 text-sm text-emerald-700">
+
                             Claim #{{ $delivery->claim_id }}
+
                         </p>
 
                     </div>
@@ -295,14 +415,29 @@
                 </div>
 
 
-                {{-- Receiver Information --}}
-                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
 
-                    <div class="px-6 py-5 border-b border-gray-100">
+                {{-- =================================================
+                     RECEIVER
+                     ================================================= --}}
+
+                <div
+                    class="bg-white
+                           rounded-2xl
+                           border border-emerald-200
+                           shadow-sm
+                           overflow-hidden"
+                >
+
+                    <div class="px-6 py-5 border-b border-emerald-100">
 
                         <div class="flex items-center gap-3">
 
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <div
+                                class="w-10 h-10 rounded-xl
+                                       bg-blue-100
+                                       text-blue-700
+                                       flex items-center justify-center"
+                            >
 
                                 <svg
                                     class="w-5 h-5"
@@ -341,11 +476,17 @@
 
                     <div class="p-6">
 
-                        @if ($delivery->claim && $delivery->claim->receiver)
+                        @if ($delivery->claim?->receiver)
 
                             <div class="flex items-center gap-4">
 
-                                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
+                                <div
+                                    class="w-12 h-12 rounded-xl
+                                           bg-blue-100
+                                           text-blue-700
+                                           flex items-center justify-center
+                                           font-bold"
+                                >
 
                                     {{ strtoupper(substr($delivery->claim->receiver->name, 0, 1)) }}
 
@@ -354,7 +495,9 @@
                                 <div>
 
                                     <p class="text-lg font-bold text-gray-900">
+
                                         {{ $delivery->claim->receiver->name }}
+
                                     </p>
 
                                     <p class="text-sm text-gray-500">
@@ -378,14 +521,29 @@
                 </div>
 
 
-                {{-- Volunteer Information --}}
-                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
 
-                    <div class="px-6 py-5 border-b border-gray-100">
+                {{-- =================================================
+                     VOLUNTEER
+                     ================================================= --}}
+
+                <div
+                    class="bg-white
+                           rounded-2xl
+                           border border-emerald-200
+                           shadow-sm
+                           overflow-hidden"
+                >
+
+                    <div class="px-6 py-5 border-b border-emerald-100">
 
                         <div class="flex items-center gap-3">
 
-                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                            <div
+                                class="w-10 h-10 rounded-xl
+                                       bg-amber-100
+                                       text-amber-700
+                                       flex items-center justify-center"
+                            >
 
                                 <svg
                                     class="w-5 h-5"
@@ -428,7 +586,13 @@
 
                             <div class="flex items-center gap-4">
 
-                                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
+                                <div
+                                    class="w-12 h-12 rounded-xl
+                                           bg-amber-100
+                                           text-amber-700
+                                           flex items-center justify-center
+                                           font-bold"
+                                >
 
                                     {{ strtoupper(substr($delivery->volunteer->name, 0, 1)) }}
 
@@ -437,7 +601,9 @@
                                 <div>
 
                                     <p class="text-lg font-bold text-gray-900">
+
                                         {{ $delivery->volunteer->name }}
+
                                     </p>
 
                                     <p class="text-sm text-gray-500">
@@ -452,7 +618,12 @@
 
                             <div class="flex items-center gap-3">
 
-                                <span class="w-10 h-10 rounded-xl bg-gray-100 text-gray-400 flex items-center justify-center">
+                                <span
+                                    class="w-10 h-10 rounded-xl
+                                           bg-gray-100
+                                           text-gray-400
+                                           flex items-center justify-center"
+                                >
 
                                     <svg
                                         class="w-5 h-5"
@@ -493,14 +664,29 @@
                 </div>
 
 
-                {{-- Delivery Status --}}
-                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
 
-                    <div class="px-6 py-5 border-b border-gray-100">
+                {{-- =================================================
+                     CURRENT STATUS
+                     ================================================= --}}
+
+                <div
+                    class="bg-white
+                           rounded-2xl
+                           border border-emerald-200
+                           shadow-sm
+                           overflow-hidden"
+                >
+
+                    <div class="px-6 py-5 border-b border-emerald-100">
 
                         <div class="flex items-center gap-3">
 
-                            <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
+                            <div
+                                class="w-10 h-10 rounded-xl
+                                       bg-emerald-100
+                                       text-emerald-700
+                                       flex items-center justify-center"
+                            >
 
                                 <svg
                                     class="w-5 h-5"
@@ -541,36 +727,89 @@
 
                         @if ($delivery->status === 'pending')
 
-                            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-sm font-semibold">
-                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                            <span
+                                class="inline-flex items-center gap-2
+                                       px-3 py-1.5
+                                       rounded-full
+                                       bg-blue-100
+                                       text-blue-800
+                                       border border-blue-200
+                                       text-sm font-semibold"
+                            >
+
+                                <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+
                                 Pending
+
                             </span>
 
                         @elseif ($delivery->status === 'accepted')
 
-                            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-sm font-semibold">
-                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            <span
+                                class="inline-flex items-center gap-2
+                                       px-3 py-1.5
+                                       rounded-full
+                                       bg-amber-100
+                                       text-amber-800
+                                       border border-amber-200
+                                       text-sm font-semibold"
+                            >
+
+                                <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+
                                 Accepted
+
                             </span>
 
                         @elseif ($delivery->status === 'picked_up')
 
-                            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 text-purple-700 text-sm font-semibold">
-                                <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                            <span
+                                class="inline-flex items-center gap-2
+                                       px-3 py-1.5
+                                       rounded-full
+                                       bg-purple-100
+                                       text-purple-800
+                                       border border-purple-200
+                                       text-sm font-semibold"
+                            >
+
+                                <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+
                                 Picked Up
+
                             </span>
 
                         @elseif ($delivery->status === 'delivered')
 
-                            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-semibold">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span
+                                class="inline-flex items-center gap-2
+                                       px-3 py-1.5
+                                       rounded-full
+                                       bg-emerald-100
+                                       text-emerald-800
+                                       border border-emerald-200
+                                       text-sm font-semibold"
+                            >
+
+                                <span class="w-2 h-2 rounded-full bg-emerald-700"></span>
+
                                 Delivered
+
                             </span>
 
                         @else
 
-                            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm font-semibold">
+                            <span
+                                class="inline-flex items-center gap-2
+                                       px-3 py-1.5
+                                       rounded-full
+                                       bg-gray-100
+                                       text-gray-700
+                                       text-sm font-semibold"
+                            >
+
                                 {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
+
                             </span>
 
                         @endif
@@ -582,13 +821,21 @@
             </div>
 
 
-            {{-- ================================================= --}}
-            {{-- DELIVERY TIMELINE --}}
-            {{-- ================================================= --}}
 
-            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-6">
+            {{-- =========================================================
+                 DELIVERY TIMELINE
+                 ========================================================= --}}
 
-                <div class="px-6 py-5 border-b border-gray-100">
+            <div
+                class="bg-white
+                       rounded-2xl
+                       border border-emerald-200
+                       shadow-sm
+                       overflow-hidden
+                       mb-6"
+            >
+
+                <div class="px-6 py-5 border-b border-emerald-100">
 
                     <h3 class="text-lg font-bold text-gray-900">
                         Delivery Timeline
@@ -606,12 +853,20 @@
                     <div class="space-y-6">
 
 
-                        {{-- Created --}}
+                        {{-- =================================================
+                             CREATED
+                             ================================================= --}}
+
                         <div class="flex gap-4">
 
                             <div class="flex flex-col items-center">
 
-                                <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">
+                                <div
+                                    class="w-10 h-10 rounded-full
+                                           bg-emerald-100
+                                           text-emerald-700
+                                           flex items-center justify-center"
+                                >
 
                                     <svg
                                         class="w-5 h-5"
@@ -631,7 +886,7 @@
 
                                 </div>
 
-                                <div class="w-px flex-1 bg-gray-200 mt-2"></div>
+                                <div class="w-px flex-1 bg-emerald-200 mt-2"></div>
 
                             </div>
 
@@ -643,7 +898,9 @@
                                 </p>
 
                                 <p class="text-sm text-gray-500 mt-1">
+
                                     {{ $delivery->created_at?->format('M d, Y · h:i A') ?? 'N/A' }}
+
                                 </p>
 
                             </div>
@@ -651,15 +908,22 @@
                         </div>
 
 
-                        {{-- Accepted --}}
+
+                        {{-- =================================================
+                             ACCEPTED
+                             ================================================= --}}
+
                         <div class="flex gap-4">
 
                             <div class="flex flex-col items-center">
 
-                                <div class="w-10 h-10 rounded-full
-                                    {{ $delivery->accepted_at
-                                        ? 'bg-amber-50 text-amber-600'
-                                        : 'bg-gray-100 text-gray-400' }}
+                                <div
+                                    class="w-10 h-10 rounded-full
+                                    {{
+                                        $delivery->accepted_at
+                                            ? 'bg-amber-100 text-amber-700'
+                                            : 'bg-gray-100 text-gray-400'
+                                    }}
                                     flex items-center justify-center"
                                 >
 
@@ -681,7 +945,7 @@
 
                                 </div>
 
-                                <div class="w-px flex-1 bg-gray-200 mt-2"></div>
+                                <div class="w-px flex-1 bg-emerald-200 mt-2"></div>
 
                             </div>
 
@@ -695,9 +959,13 @@
                                 <p class="text-sm text-gray-500 mt-1">
 
                                     @if ($delivery->accepted_at)
+
                                         {{ \Carbon\Carbon::parse($delivery->accepted_at)->format('M d, Y · h:i A') }}
+
                                     @else
+
                                         Not yet accepted
+
                                     @endif
 
                                 </p>
@@ -707,15 +975,22 @@
                         </div>
 
 
-                        {{-- Picked Up --}}
+
+                        {{-- =================================================
+                             PICKED UP
+                             ================================================= --}}
+
                         <div class="flex gap-4">
 
                             <div class="flex flex-col items-center">
 
-                                <div class="w-10 h-10 rounded-full
-                                    {{ $delivery->picked_up_at
-                                        ? 'bg-purple-50 text-purple-600'
-                                        : 'bg-gray-100 text-gray-400' }}
+                                <div
+                                    class="w-10 h-10 rounded-full
+                                    {{
+                                        $delivery->picked_up_at
+                                            ? 'bg-purple-100 text-purple-700'
+                                            : 'bg-gray-100 text-gray-400'
+                                    }}
                                     flex items-center justify-center"
                                 >
 
@@ -737,7 +1012,7 @@
 
                                 </div>
 
-                                <div class="w-px flex-1 bg-gray-200 mt-2"></div>
+                                <div class="w-px flex-1 bg-emerald-200 mt-2"></div>
 
                             </div>
 
@@ -751,9 +1026,13 @@
                                 <p class="text-sm text-gray-500 mt-1">
 
                                     @if ($delivery->picked_up_at)
+
                                         {{ \Carbon\Carbon::parse($delivery->picked_up_at)->format('M d, Y · h:i A') }}
+
                                     @else
+
                                         Not yet picked up
+
                                     @endif
 
                                 </p>
@@ -763,15 +1042,22 @@
                         </div>
 
 
-                        {{-- Delivered --}}
+
+                        {{-- =================================================
+                             DELIVERED
+                             ================================================= --}}
+
                         <div class="flex gap-4">
 
                             <div class="flex flex-col items-center">
 
-                                <div class="w-10 h-10 rounded-full
-                                    {{ $delivery->delivered_at
-                                        ? 'bg-emerald-50 text-emerald-600'
-                                        : 'bg-gray-100 text-gray-400' }}
+                                <div
+                                    class="w-10 h-10 rounded-full
+                                    {{
+                                        $delivery->delivered_at
+                                            ? 'bg-emerald-100 text-emerald-700'
+                                            : 'bg-gray-100 text-gray-400'
+                                    }}
                                     flex items-center justify-center"
                                 >
 
@@ -805,9 +1091,13 @@
                                 <p class="text-sm text-gray-500 mt-1">
 
                                     @if ($delivery->delivered_at)
+
                                         {{ \Carbon\Carbon::parse($delivery->delivered_at)->format('M d, Y · h:i A') }}
+
                                     @else
+
                                         Not yet delivered
+
                                     @endif
 
                                 </p>
@@ -823,13 +1113,21 @@
             </div>
 
 
-            {{-- ================================================= --}}
-            {{-- ADMIN ACTIONS --}}
-            {{-- ================================================= --}}
 
-            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-6">
+            {{-- =========================================================
+                 ADMINISTRATIVE ACTIONS
+                 ========================================================= --}}
 
-                <div class="px-6 py-5 border-b border-gray-100">
+            <div
+                class="bg-white
+                       rounded-2xl
+                       border border-emerald-200
+                       shadow-sm
+                       overflow-hidden
+                       mb-6"
+            >
+
+                <div class="px-6 py-5 border-b border-emerald-100">
 
                     <h3 class="text-lg font-bold text-gray-900">
                         Administrative Actions
@@ -844,9 +1142,21 @@
 
                 <div class="p-6">
 
+
+                    {{-- =================================================
+                         ACCEPTED / PICKED UP
+                         Admin can release the delivery.
+                         ================================================= --}}
+
                     @if (in_array($delivery->status, ['accepted', 'picked_up']))
 
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div
+                            class="flex flex-col
+                                   sm:flex-row
+                                   sm:items-center
+                                   sm:justify-between
+                                   gap-4"
+                        >
 
                             <div>
 
@@ -861,6 +1171,9 @@
                             </div>
 
 
+                            {{-- Release form
+                                 PUT request goes to AdminDeliveryController@release --}}
+
                             <form
                                 action="{{ route('admin.deliveries.release', $delivery) }}"
                                 method="POST"
@@ -869,11 +1182,22 @@
 
                                 @csrf
 
+                                {{-- HTML forms do not directly support PUT,
+                                     so Laravel's @method creates a hidden PUT field. --}}
+
                                 @method('PUT')
 
                                 <button
                                     type="submit"
-                                    class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-50 text-orange-700 hover:bg-orange-100 border border-orange-200 text-sm font-semibold transition"
+                                    class="inline-flex items-center justify-center gap-2
+                                           px-4 py-2.5
+                                           rounded-xl
+                                           bg-orange-100
+                                           text-orange-800
+                                           hover:bg-orange-200
+                                           border border-orange-200
+                                           text-sm font-semibold
+                                           transition"
                                 >
 
                                     <svg
@@ -900,11 +1224,27 @@
 
                         </div>
 
+
+                    {{-- =================================================
+                         PENDING
+                         ================================================= --}}
+
                     @elseif ($delivery->status === 'pending')
 
-                        <div class="flex items-center gap-3 rounded-xl bg-blue-50 border border-blue-100 p-4">
+                        <div
+                            class="flex items-center gap-3
+                                   rounded-xl
+                                   bg-blue-50
+                                   border border-blue-100
+                                   p-4"
+                        >
 
-                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                            <div
+                                class="w-10 h-10 rounded-xl
+                                       bg-blue-100
+                                       text-blue-600
+                                       flex items-center justify-center"
+                            >
 
                                 <svg
                                     class="w-5 h-5"
@@ -938,11 +1278,27 @@
 
                         </div>
 
+
+                    {{-- =================================================
+                         DELIVERED
+                         ================================================= --}}
+
                     @elseif ($delivery->status === 'delivered')
 
-                        <div class="flex items-center gap-3 rounded-xl bg-emerald-50 border border-emerald-100 p-4">
+                        <div
+                            class="flex items-center gap-3
+                                   rounded-xl
+                                   bg-emerald-100
+                                   border border-emerald-200
+                                   p-4"
+                        >
 
-                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                            <div
+                                class="w-10 h-10 rounded-xl
+                                       bg-emerald-200
+                                       text-emerald-700
+                                       flex items-center justify-center"
+                            >
 
                                 <svg
                                     class="w-5 h-5"
@@ -983,15 +1339,24 @@
             </div>
 
 
-            {{-- ================================================= --}}
-            {{-- MOBILE BACK BUTTON --}}
-            {{-- ================================================= --}}
+
+            {{-- =========================================================
+                 MOBILE BACK BUTTON
+                 ========================================================= --}}
 
             <div class="sm:hidden">
 
                 <a
                     href="{{ route('admin.deliveries') }}"
-                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition"
+                    class="w-full
+                           inline-flex items-center justify-center gap-2
+                           px-4 py-3
+                           rounded-xl
+                           bg-emerald-800
+                           text-white
+                           text-sm font-semibold
+                           hover:bg-emerald-900
+                           transition"
                 >
 
                     <svg
